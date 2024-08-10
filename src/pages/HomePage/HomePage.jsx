@@ -4,13 +4,18 @@ import images from '../../images/Image.jpg';
 import images1 from '../../images/Image (1).jpg';
 import images2 from '../../images/Image (2).jpg';
 import { Navbar } from '../../components/NavBar/Navbar';
+import { DecorationTab } from '../../components/DecorationTab/DecorationTab';
 
 export const HomePage = () => {  
   return (
     <div className={css.homePageBody}>
       <Navbar />
     <div className={css.homePageContainer}>
-      <div className={css.homePageImageWrapper}></div>
+      <div className={css.homePageImageWrapper}>
+        <div>
+          <DecorationTab />
+        </div>
+      </div>
       <div className={css.homeContentWrapper}>
         <div>
             <span className={css.homePageInfo}>EXPENSE LOG</span>
@@ -20,7 +25,7 @@ export const HomePage = () => {
               expenses, allowing for a stress-free mastery over your financial world.</p>
           </div>
           <div className={css.homePageBtn}>
-            <button className={css.signUp}>Sign Up</button>
+            <button type='submit' className={css.signUp}>Sign Up</button>
             <button className={css.signIn}>Sign In</button>
           </div>
           <div className={css.homePageImg}>

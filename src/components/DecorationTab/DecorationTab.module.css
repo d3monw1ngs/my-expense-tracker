@@ -1,0 +1,58 @@
+.tabContainer {
+    width: 300px;
+    height: 110px;
+    border-radius: 20px;
+    background-color: #fafafa;
+    display: flex;
+    margin-top: 300px;
+}
+
+.arrowUp {
+    background-color: #0EF387;
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    margin-top: 39px;
+    margin-left: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tabInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 30px;
+}
+
+.tabInfoText {
+    color: #11101C80;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.tabInfoNum {
+    color: #11101C;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.tabPercentContainer {
+    width: 58px;
+    height: 22px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #02B15A26;
+    border-radius: 13px;
+    margin-top: 62px;
+}
+
+.tabPercent {
+    color: #02B15A;
+    font-size: 12px;
+}
