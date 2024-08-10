@@ -1,0 +1,23 @@
+.navbar {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #fff;
+    margin-top: 32px;
+    gap: 8px;
+}
+
+.logo {
+    width: 27px;
+    height: 16px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 25.94px;
+    width: 191px;
+    height: 26px;
+}
