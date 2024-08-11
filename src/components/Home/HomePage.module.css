@@ -75,6 +75,11 @@
     margin-top: 20px;  
 }
 
+.signUp:hover,
+.signIn:hover {
+    background-color:  #0EF387;
+}
+
 .signUp {
     margin-right: 30px;
 }

@@ -3,8 +3,8 @@ import css from './HomePage.module.css';
 import images from '../../images/Image.jpg';
 import images1 from '../../images/Image (1).jpg';
 import images2 from '../../images/Image (2).jpg';
-import { Navbar } from '../../components/NavBar/Navbar';
-import { DecorationTab } from '../../components/DecorationTab/DecorationTab';
+import { Navbar } from '../NavBar/Navbar';
+import { DecorationTab } from '../DecorationTab/DecorationTab';
 
 export const HomePage = () => {  
   return (
