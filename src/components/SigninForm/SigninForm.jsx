@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import css from './SignupForm.module.css';
+import css from './SigninForm.module.css';
 import { Navbar } from 'components/NavBar/Navbar';
 import { DecorationTab } from 'components/DecorationTab/DecorationTab';
 
-
-export const SignupForm = () => {
+export const SigninForm = () => {
     const [passwordVisible, setPassWordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -13,32 +12,23 @@ export const SignupForm = () => {
     };
 
   return (
-    <div className={css.signupContainer}>
+    <div className={css.signinContainer}>
         <Navbar />
-        <div className={css.signupWrapper}>
-            <div className={css.signupImageWrapper}>
+        <div className={css.signinWrapper}>
+            <div className={css.signinImageWrapper}>
                 <div>
                     <DecorationTab />
                 </div>      
             </div>
-        <div className={css.signupFormContainer}>  
-        <div className={css.suDetails}>
-            <h1>Sign Up</h1>
-            <p className={css.signupText}>Step into a world of hassle-free expense management! Your journey 
-                towards financial mastery begins here.
+        <div className={css.signinFormContainer}>  
+        <div className={css.siDetails}>
+            <h1>Sign In</h1>
+            <p className={css.signinText}>Welcom back to effortless expense tracking! Your financial
+                dashboard awaits.
             </p>
         </div>      
-        <form className={css.signupForm}>
-            <label className={css.signupLabel}>
-                <input
-                    type="name"
-                    name="name"
-                    placeholder="Name"
-                    className={css.formControl}
-                />
-            </label>
-
-            <label className={css.signupLabel}>
+        <form className={css.signinForm}>
+            <label className={css.signinLabel}>
                 <input
                     type="email"
                     name="email"
@@ -47,7 +37,7 @@ export const SignupForm = () => {
                 />
             </label>
 
-            <label className={`${css.signupLabel} ${css.passwordField}`}>
+            <label className={`${css.signinLabel} ${css.passwordField}`}>
                 <input
                     type={passwordVisible ? "text" : "password"}
                     name="password"
@@ -60,8 +50,8 @@ export const SignupForm = () => {
             </label>
             
             <div>
-                <button type="submit" className={css.signupBtn}>Sign Up</button>
-                <p className={css.btnText}>Already have account? <span className={css.signupSpan}>Sign In</span></p>
+                <button type="submit" className={css.signinBtn}>Sign In</button>
+                <p className={css.btnText}>Don't have an account? <span className={css.signinSpan}>Sign Up</span></p>
             </div>
         </form>
             
