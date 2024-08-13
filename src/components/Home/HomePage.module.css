@@ -91,6 +91,7 @@
     width: 145px;
     height: 47px;
     font-weight: 400;
+    font-size: 16px;
     border: none;
 }
 
@@ -126,7 +127,5 @@
     height: 48px;
     border-radius: 40px;
     border: 2px;
-    /* gap: 32px;
-    margin-left: 765px; */
 }
 

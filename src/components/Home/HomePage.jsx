@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import css from './HomePage.module.css';
 import images from '../../images/Image.jpg';
 import images1 from '../../images/Image (1).jpg';
@@ -7,6 +8,16 @@ import { Navbar } from '../NavBar/Navbar';
 import { DecorationTab } from '../DecorationTab/DecorationTab';
 
 export const HomePage = () => {  
+  const navigate = useNavigate();
+
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
+
+  const handleSignIn = () => {
+    navigate('/signin');
+  };
+
   return (
     <div className={css.homePageBody}>
       <Navbar />
@@ -25,8 +36,18 @@ export const HomePage = () => {
               expenses, allowing for a stress-free mastery over your financial world.</p>
           </div>
           <div className={css.homePageBtn}>
-            <button type='submit' className={css.signUp}>Sign Up</button>
-            <button className={css.signIn}>Sign In</button>
+            <button 
+              type='button' 
+              className={css.signUp} 
+              onClick={handleSignUp}>
+                Sign Up
+            </button>
+            <button 
+              type='button'
+              className={css.signIn}
+              onClick={handleSignIn}>
+                Sign In
+            </button>
           </div>
           <div className={css.homePageImg}>
             <img src={images} alt="Fleur Cook"></img>
