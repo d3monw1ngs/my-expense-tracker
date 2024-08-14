@@ -5,6 +5,7 @@ import css from './TransactionPage.module.css';
 import { Gauge } from 'components/Gauge/Gauge';
 import { FiCalendar } from "react-icons/fi";
 import { AiOutlineClockCircle } from "react-icons/ai";
+import arrowUp from '../../images/Arrow 15.svg';
 
 export const TransactionPage = ( [ income, expense, categories, onFormSubmit ]) => {
   const [date, setDate] = useState('');
@@ -41,7 +42,7 @@ export const TransactionPage = ( [ income, expense, categories, onFormSubmit ]) 
           <div className={css.inExContainer}>
             <div className={css.incomeDetails}>
               <div className={css.arrow}>
-                <img src={income.icon} alt="arrow up" />
+                <img src={arrowUp} alt="arrow up" />
               </div>
               <div className={css.incomeWrap}>
                 <p className={css.text}>Total Income</p>
@@ -50,7 +51,7 @@ export const TransactionPage = ( [ income, expense, categories, onFormSubmit ]) 
             </div>
             <div className={css.expenseDetails}>
             <div className={css.arrowDown}>
-                <img src={expense.icon} alt="arrow down" />
+                <img src={arrowUp} alt="arrow down" />
               </div>
               <div className={css.expenseWrap}>
                 <p className={css.text}>Total Expense</p>

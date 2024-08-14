@@ -6,6 +6,8 @@ import images1 from '../../images/Image (1).jpg';
 import images2 from '../../images/Image (2).jpg';
 import { Navbar } from '../NavBar/Navbar';
 import { DecorationTab } from '../DecorationTab/DecorationTab';
+import { ExpenseForm } from 'components/Expense/ExpenseForm';
+
 
 export const HomePage = () => {  
   const navigate = useNavigate();
@@ -60,6 +62,9 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
+     
+      <ExpenseForm />
     </div>    
+    
   );
 };

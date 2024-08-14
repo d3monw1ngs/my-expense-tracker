@@ -1,0 +1,93 @@
+.headingContainer {
+    margin-top: 30px;
+    display: flex;
+    margin-left: 50px;
+    gap: 80px;
+}
+.textWrapper {
+    width: 516px;
+    margin: 0;  
+}
+.expHeading {
+    font-size: 38px;
+    color: #fafafa;
+    margin: 0;
+}
+.expText {
+    font-size: 16px;
+    color: #fafafa66;
+    margin: 20px 0;
+}
+.inExWrapper {
+    display: flex;
+    gap: 25px;
+}
+.arrowUp,
+.arrowDown {
+    background-color: #0EF387;
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    margin-left: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+.arrowDown {
+    transform: rotate(180deg);
+}
+.iconWrapper {
+    display: flex;
+    gap: 30px;
+    width: 300px;
+    background-color: #171719;
+    border-radius: 30px;
+    align-items: center;
+}
+.inDetails,
+.exDetails {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.inTitle,
+.exTitle {
+    font-size: 16px;
+    color: #fafafa66;
+    margin: 0;
+}
+.inAmount,
+.exAmount {
+    font-size: 24px;
+    color: #fafafa;
+    margin: 0;
+}
+.search {
+    width: 254px;
+    border-radius: 30px;
+    height: 50px;
+    padding: 8px 12px;
+    margin: 0;
+    background-color: transparent;
+    color: #fafafa66;
+    font-size: 16px;
+    border: 1px solid #fafafa66;
+    text-align: center;
+}
+.date {
+    width: 183px;
+    border-radius: 30px;
+    height: 50px;
+    padding: 8px 12px;
+    margin: 0;
+    background-color: transparent;
+    color: #fafafa66;
+    font-size: 16px;
+    border: 1px solid #fafafa66;
+    text-align: center;
+}
+/* .searchWrapper {
+    position: absolute;
+} */
