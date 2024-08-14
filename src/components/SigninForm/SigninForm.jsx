@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+// import { useNavigate } from 'react-router-dom';
 import css from './SigninForm.module.css';
 import { Navbar } from 'components/NavBar/Navbar';
 import { DecorationTab } from 'components/DecorationTab/DecorationTab';
@@ -10,7 +11,7 @@ export const SigninForm = () => {
     const [passwordVisible, setPassWordVisible] = useState(false);
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState({ email: '', password: '' });
-
+  
     const togglePasswordVisibility = () => {
         setPassWordVisible(prevState => !prevState);
     };
@@ -41,6 +42,7 @@ export const SigninForm = () => {
             console.log('Form submitted:', formData);
         }
     };
+
 
   return (
     <div className={css.signinContainer}>
@@ -86,14 +88,20 @@ export const SigninForm = () => {
             </label>
             
             <div>
-                <button type="submit" className={css.signinBtn}>Sign In</button>
+                <button 
+                    type="submit" 
+                    className={css.signinBtn}
+                    // onClick={handleSignIn}
+                    >
+                        Sign In
+                </button>
                 <p className={css.btnText}>Don't have an account?{' '}
                     <Link to="/signup" className={css.signinSpan}>Sign Up</Link>
                 </p>
             </div>
         </form>            
-        </div>
-        </div>
+    </div>
+</div>
         <div>
             <TransactionPage />
         </div>

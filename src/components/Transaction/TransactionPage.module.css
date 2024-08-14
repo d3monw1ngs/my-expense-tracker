@@ -1,0 +1,195 @@
+.transactionContainer {
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;  
+    gap: 40px;  
+}
+
+.transactionExpWrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.arrowDown {
+    transform: rotate(180deg);
+}
+
+.formContainer {
+    flex: 1;
+}
+
+.transExpLog h3{
+    font-size: 38px;
+    font-weight: 400;
+    color: #fafafa;
+    margin: 0;
+}
+
+.transExpLog p{
+    font-size: 16px;
+    color: #fafafa66;
+}
+
+.inExContainer {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+.incomeDetails,
+.expenseDetails {
+    display: flex;
+    width: 300px;
+    height: 120px;
+    background-color: #171719;
+    border-radius: 40px;
+    gap: 30px;
+    text-align: center;
+}
+.arrow,
+.arrowDown {
+    background-color: #0EF387;
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    margin-top: 39px;
+    margin-left: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+.incomeWrap,
+.expenseWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.text{
+    font-size: 16px;
+    color: #fafafa80;
+    margin: 0;
+}
+.amount {
+    font-size: 24px;
+    color: #fafafa;
+    margin: 0;
+}
+.expenseContainer {
+    width: 630px;
+    height: 302px;
+    background-color: #171719;
+    border-radius: 30px;
+    margin-top: 30px;
+    display: flex;
+}
+.expTitle,
+.expListItems {
+    font-size: 16px;
+    color: #fafafa80;
+}
+.expListItems {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+}
+.circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.expCategory {
+    flex: 1;
+}
+.expList {
+    flex: 1;
+}
+
+.formContainer {
+    background-color: #171719;
+    width: 566px;
+    height: 600px;
+    border-radius: 30px;
+}
+
+.radio {
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.dateContainer {
+    display: flex;
+    gap: 30px;
+    margin-left: 30px;
+}
+.date,
+.time {
+    width: 242px;
+    height: 48px;
+    border-radius: 12px;
+    padding: 12px 18px;
+    border: 1px solid #fafafa33;
+    background-color: transparent;
+    color: #fafafa66;
+    font-size: 16px;
+    margin: 0;
+}
+.inputFields,
+.addBtn {
+    margin-left: 30px;
+}
+
+.inputText {
+    width: 486px;
+    height: 35px;
+    border-radius: 15px;
+    background-color: transparent;
+}
+.inputComment {
+    height: 75px;
+}
+.inputWrapper {
+    position: relative;
+}
+.inputWrapper input{
+    width: 100%;
+    padding-right: 2rem;
+    box-sizing: border-box;
+}
+.icon {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+.dateInput,
+.timeInput {
+    margin-bottom: 1rem;
+}
+.inputText {
+    border: 1px solid #fafafa33;
+    color: #fafafa66;
+    font-size: 16px;
+    padding: 12px 18px;
+    margin: 0;
+}
+
+.addBtn {
+    margin-top: 10px;
+    width: 118px;
+    height: 47px;
+    border-radius: 40px;
+    font-size: 16px;
+}
+.addBtn:hover {
+    background-color: #0EF387;
+}
+
+
+
