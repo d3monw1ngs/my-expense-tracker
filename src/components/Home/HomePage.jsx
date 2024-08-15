@@ -7,6 +7,8 @@ import images2 from '../../images/Image (2).jpg';
 import { Navbar } from '../NavBar/Navbar';
 import { DecorationTab } from '../DecorationTab/DecorationTab';
 import { ExpenseForm } from 'components/Expense/ExpenseForm';
+import { IncomeForm } from 'components/Income/IncomeForm';
+// import bgImage from '../../images/bgimage.jpg';
 
 
 export const HomePage = () => {  
@@ -25,7 +27,8 @@ export const HomePage = () => {
       <Navbar />
     <div className={css.homePageContainer}>
       <div className={css.homePageImageWrapper}>
-        <div>
+        {/* <img src={bgImage} alt="background" className={css.image} /> */}
+        <div className={css.decorationTabWrapper}>
           <DecorationTab />
         </div>
       </div>
@@ -64,6 +67,7 @@ export const HomePage = () => {
       </div>
      
       <ExpenseForm />
+      <IncomeForm />
     </div>    
     
   );

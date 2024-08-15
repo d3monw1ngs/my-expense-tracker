@@ -1,0 +1,63 @@
+.userNav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.userImg {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+}
+.userName {
+    font-size: 16px;
+    color: #fafafa66;
+}
+.iconUp {
+    color: #0EF387;
+    font-size: 24px;
+    margin: 10px;
+    width: 10px;
+    height: 10px;
+    stroke-width: 1.5;
+}
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #0C0D0D;
+    border: 1px solid #fafafa33;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 10px;
+    border-radius: 15px;
+    width: 217px;
+}
+.dropdownMenu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.dropdownMenu li {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+.dropdownMenu li a {
+    text-decoration: none;
+    color: #fafafa80;
+    display: block;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+.dropdownMenu li a:hover {
+    color: #fafafa;
+    cursor: pointer;
+}
+.dropdownMenu li .icon {
+    margin-right: 8px;
+    color: #fafafa80;
+}
+.dropdownMenu li a:hover .icon {
+    color: #0EF387;
+}

@@ -1,19 +1,19 @@
 import { TransactionNav } from 'components/Transaction/TransactionNav';
 import React from 'react';
+import css from './IncomeForm.module.css';
 import arrowUp from '../../images/Arrow 15.svg';
-import css from './ExpenseForm.module.css';
-import { ExpenseTable } from 'components/TableForm/ExpenseTable';
+import { IncomeTable } from 'components/TableForm/IncomeTable';
 
-export const ExpenseForm = () => {
+export const IncomeForm = () => {
   return (
     <div>
-        <TransactionNav />      
+        <TransactionNav />
         <div>
             <div className={css.headingContainer}>
                 <div className={css.textWrapper}>
-                    <p className={css.expHeading}>All Expense</p>
-                    <p className={css.expText}>View and manage every transaction seamleassly! Your entire financial
-                        landscape, all in one place.
+                    <p className={css.expHeading}>All Income</p>
+                    <p className={css.expText}>Track and celebrate every bit of earnings effortlessly!
+                        Gain insights into your total revenue in a snap.
                     </p>
                 </div>
                 <div className={css.inExWrapper}>
@@ -37,8 +37,8 @@ export const ExpenseForm = () => {
                     </div>
                 </div>
             </div>
-            <ExpenseTable />
+            <IncomeTable />
         </div>
     </div>
-  );
-};
+  )
+}

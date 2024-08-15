@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-// import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { FaEyeSlash } from 'react-icons/fa';
 import css from './SigninForm.module.css';
 import { Navbar } from 'components/NavBar/Navbar';
 import { DecorationTab } from 'components/DecorationTab/DecorationTab';
@@ -8,41 +7,6 @@ import { Link } from 'react-router-dom';
 import { TransactionPage } from 'components/Transaction/TransactionPage';
 
 export const SigninForm = () => {
-    const [passwordVisible, setPassWordVisible] = useState(false);
-    const [formData, setFormData] = useState({ email: '', password: '' });
-    const [errors, setErrors] = useState({ email: '', password: '' });
-  
-    const togglePasswordVisibility = () => {
-        setPassWordVisible(prevState => !prevState);
-    };
-
-    const handleChange = e => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({ ...prevData, [name]: value }));
-    };
-
-    const validate = () => {
-        let emailError = '';
-        let passwordError ='';
-
-        if (!formData.email) {
-            emailError = 'Email is required';
-        }
-        if (!formData.password) {
-            passwordError = 'Password is required';
-        }
-
-        setErrors({ email: emailError, password: passwordError });
-        return !emailError && !passwordError;
-    };
-
-    const handleSubmit = e => {
-        e.preventDefault();
-        if(validate()) {
-            console.log('Form submitted:', formData);
-        }
-    };
-
 
   return (
     <div className={css.signinContainer}>
@@ -60,30 +24,25 @@ export const SigninForm = () => {
                 dashboard awaits.
             </p>
         </div>      
-        <form className={css.signinForm} onSubmit={handleSubmit}>
+        <form className={css.signinForm}>
             <label className={css.signinLabel}>
                 <input
                     type="email"
                     name="email"
                     placeholder="Email"
                     className={css.formControl}
-                    value={formData.email}
-                    onChange={handleChange}
                 />
-                {errors.email && <span className={css.errorText}>{errors.email}</span>}
             </label>
 
             <label className={`${css.signinLabel} ${css.passwordField}`}>
                 <input
-                    type={passwordVisible ? "text" : "password"}
+                    type="password"
                     name="password"
                     placeholder="Password"
                     className={css.formControl}
-                    value={formData.password}
-                    onChange={handleChange}
                 />
-                <span onClick={togglePasswordVisibility} className={css.passwordToggle}>
-                    {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                <span className={css.passwordToggle}>
+                    <FaEyeSlash />
                 </span>                           
             </label>
             
@@ -91,7 +50,6 @@ export const SigninForm = () => {
                 <button 
                     type="submit" 
                     className={css.signinBtn}
-                    // onClick={handleSignIn}
                     >
                         Sign In
                 </button>

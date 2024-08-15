@@ -1,0 +1,94 @@
+.tableContainer {
+    background-color: #171719;
+    margin-left: 50px;
+    border-radius: 13px;
+    margin-top: 20px;
+}
+.filterWrapper {
+    display: flex;
+    padding: 20px 45px;
+    border-radius: 30px;
+    gap: 30px;
+}
+.searchWrapper, .dateWrapper {
+    position: relative;
+    display: inline-block;
+}
+.search, .date {
+    padding-right: 2.5rem;
+    padding-left: 1rem;
+    height: 40px;
+    font-size: 16px;
+    border: 1px solid #fafafa66;
+    border-radius: 30px;
+    background-color: transparent;
+    color: #fafafa66;
+}
+.icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #0EF387;
+    font-size: 20px;
+}
+.tableWrapper {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.table {
+    width: 1240px;
+    margin-left: 50px;
+    border-collapse: collapse;
+    color: #fafafa;
+    background-color: #171719;
+    border-radius: 20px;
+}
+.table th,
+.table td {
+    padding: 10px 15px;
+    text-align: left;
+    vertical-align: top;
+}
+.table th {
+    background-color: #00000033;   
+    color: #fafafa66;
+    font-size: 16px;
+}
+.table td {
+    vertical-align: middle;
+}
+.scrollableTd {
+    max-height: 50px;
+    overflow-y: auto;
+}
+.scrollableTd::-webkit-scrollbar-thumb {
+    background-color: #fafafa33; /* Scrollbar color */
+    border-radius: 4px; /* Round the corners */
+  }
+.editBtn, .deleteBtn {
+    background-color: #0EF387;
+    border: none;
+    color: black;
+    padding: 4px 8px;
+    margin-right: 5px;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 120px;
+    height: 47px;
+    align-items: center;
+    font-size: 16px;
+}
+.deleteBtn {
+    background-color: #0C0D0D;
+    color: #fafafa;
+}
+.editBtn:hover,
+.deleteBtn:hover {
+    opacity: 0.8;
+}
+.editBtn:focus,
+.deleteBtn:focus {
+    outline: none;
+}

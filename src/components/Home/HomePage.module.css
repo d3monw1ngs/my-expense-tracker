@@ -25,9 +25,17 @@
     width: 600px;
     border-radius: 20px;
     margin-top: 10px;
-    margin-left: 60px;
+    margin-left: 50px;
     margin-bottom: 80px;
     overflow: auto;
+    position: relative;
+}
+.decorationTabWrapper {
+    position: absolute;
+    top: 40%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
 }
 
 .homeContentWrapper {

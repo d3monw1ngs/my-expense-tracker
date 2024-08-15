@@ -30,3 +30,6 @@
     color: inherit;
     gap: 8px;
 }
+.navLink:hover {
+    color: #0EF387;
+}
