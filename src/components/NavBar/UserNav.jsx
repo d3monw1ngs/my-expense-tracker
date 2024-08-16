@@ -4,13 +4,19 @@ import css from './UserNav.module.css';
 import image1 from '../../images/Image (1).jpg';
 import { MdLogout } from "react-icons/md";
 import { GoPerson } from "react-icons/go";
+import { Button } from '@chakra-ui/react';
+import { ProfileSettingsModal } from '../../components/Modal/ProfileSettingsModal';
 
 export const UserNav = () => {
     const [isDropDownVisible, setIsDropDownVisible] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const toggleDropdown = () => {
         setIsDropDownVisible(prevState => !prevState);
     };
+
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <div className={css.userNav}>
@@ -22,6 +28,8 @@ export const UserNav = () => {
         <div className={css.dropdownMenu}>
             <ul>
                 <li>
+                    <Button onClick={handleOpenModal}>Profile settings</Button>
+                    <ProfileSettingsModal isOpen={isModalOpen} onClose={handleCloseModal} />
                     <a href="/profile">
                     <GoPerson className={css.icon}/>
                     Profile Settings</a>                    
