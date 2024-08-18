@@ -4,9 +4,13 @@ import css from './SignupForm.module.css';
 import { Navbar } from 'components/NavBar/Navbar';
 import { DecorationTab } from 'components/DecorationTab/DecorationTab';
 import { Link } from 'react-router-dom';
-import { signup } from '../../Services/api';
+import { register } from '../../redux/auth/authOperations';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 export const SignupForm = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [passwordVisible, setPassWordVisible] = useState(false);
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [errors, setErrors] = useState({ name: '', email: '', password: '', server: '' });
@@ -44,17 +48,27 @@ export const SignupForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validate()) {
-            setLoading(true);
-            try {
-                await signup(formData);
-                console.log('Sign up successful');
-            } catch (error) {
-                setErrors(prevErrors => ({ ...prevErrors, server: 'Sign up failed. Please try again.'}));
-            } finally {
-                setLoading(false);
-            }
-        }
+        if (!validate()) return;
+
+        const { name, email, password } = formData;
+
+       try {
+        console.log('Submitting registration:', formData);
+        setLoading(true);
+
+        const result = await dispatch(register({ name, email, password })).unwrap();
+        console.log('Registration success:', result);
+
+        navigate('/signin', {state: {fromRegistration: true}});
+       } catch (error) {
+        console.error('Registration error:', error)
+        setErrors(prevErrors => ({
+            ...prevErrors,
+            server: error.response?.data?.message || 'Registration failed',
+        }));
+       } finally {
+        setLoading(false);
+       }
     };
 
   return (
