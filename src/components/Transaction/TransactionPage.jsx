@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTransactionsByType, addTransaction } from '../../redux/transaction/transactionsOperators';
+import { selectAllTransaction, selectTransactionsStatus, selectTransactionsError } from '../../redux/transaction/transactionsSelectors';
 import { TransactionNav } from './TransactionNav';
 import css from './TransactionPage.module.css';
 import { Gauge } from 'components/Gauge/Gauge';
@@ -6,7 +9,60 @@ import { FiCalendar } from "react-icons/fi";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import arrowUp from '../../images/Arrow 15.svg';
 
-export const TransactionPage = () => {
+export const TransactionPage = ({ transactionsType }) => {
+  const dispatch = useDispatch();
+  const transactions = useSelector(selectAllTransaction);
+  const status = useSelector(selectTransactionsStatus);
+  const error = useSelector(selectTransactionsError);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchTransactionsByType({ type: transactionsType }));
+    }
+  }, [status, dispatch, transactionsType]);
+
+  const calculateTotal = (type) => {
+    return transactions
+      .filter(transaction => transaction.type === type)
+      .reduce((total, transaction) => total + transaction.amount, 0)
+      .toFixed(2);
+  };
+
+  const totalIncome = calculateTotal('income');
+  const totalExpense = calculateTotal('expense');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const newTransaction = {
+      type: formData.get('type'),
+      date: formData.get('date'),
+      time: formData.get('time'),
+      category: formData.get('category'),
+      amount: parseFloat(formData.get('amount')),
+      comment: formData.get('comment'),
+    };
+    dispatch(addTransaction(newTransaction));
+  };
+
+  const expenseCategories = transactions.reduce((acc, transaction) => {
+    if (transaction.type === 'expense') {
+      acc[transaction.category] = (acc[transaction.category] || 0) + transaction.amount;
+    }
+    return acc;
+  }, {});
+
+  const gaugeData = Object.entries(expenseCategories).map(([category, amount]) => ({ category, amount }));
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div>
         <TransactionNav />
@@ -25,7 +81,7 @@ export const TransactionPage = () => {
               </div>
               <div className={css.incomeWrap}>
                 <p className={css.text}>Total Income</p>
-                <p className={css.amount}>$0.00</p>
+                <p className={css.amount}>${totalIncome}</p>
               </div>
             </div>
             <div className={css.expenseDetails}>
@@ -34,7 +90,7 @@ export const TransactionPage = () => {
               </div>
               <div className={css.expenseWrap}>
                 <p className={css.text}>Total Expense</p>
-                <p className={css.amount}>$0.00</p>
+                <p className={css.amount}>${totalExpense}</p>
               </div>
             </div>
           </div>
@@ -69,11 +125,12 @@ export const TransactionPage = () => {
           </div>
 
           <div className={css.formContainer}>
-            <form>     
+            <form onSubmit={handleSubmit}>     
               <div>              
                 <input 
                   type="radio" 
                   className={css.radio}
+                  name="type"
                   value="expense"
                   defaultChecked
                 /> {' '}
@@ -82,6 +139,7 @@ export const TransactionPage = () => {
                 <input 
                   type="radio" 
                   className={css.radio}
+                  name="type"
                   value="income"
                 /> {' '}
                 <label>Income</label>

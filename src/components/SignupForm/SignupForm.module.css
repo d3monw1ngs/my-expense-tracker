@@ -123,3 +123,10 @@
 .passwordToggle:hover {
     color: #0EF387;
 }
+
+.errorText {
+    color: #d9534f;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}

@@ -1,12 +1,39 @@
-import React from 'react';
-import { FaEyeSlash } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import css from './SigninForm.module.css';
 import { Navbar } from 'components/NavBar/Navbar';
 import { DecorationTab } from 'components/DecorationTab/DecorationTab';
 import { Link } from 'react-router-dom';
-import { TransactionPage } from 'components/Transaction/TransactionPage';
+// import { TransactionPage } from 'components/Transaction/TransactionPage';
+import { logIn } from '../../redux/auth/authOperations';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsLoading, selectAuthError } from '../../redux/auth/authSelectors';
+
 
 export const SigninForm = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordVisible, setPassWordVisible] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const isLoading = useSelector(selectIsLoading);
+    const error = useSelector(selectAuthError);
+
+    const togglePasswordVisibility = () => {
+        setPassWordVisible(prevState => !prevState);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const resultAction = dispatch(logIn({ email, password }));
+        if (logIn.fulfilled.match(resultAction)) {
+            const transactionType = 'expenses';
+            navigate(`/transactions/${transactionType}`);
+        } else {
+            console.error('Login failed', error);
+        }
+    };
 
   return (
     <div className={css.signinContainer}>
@@ -24,34 +51,41 @@ export const SigninForm = () => {
                 dashboard awaits.
             </p>
         </div>      
-        <form className={css.signinForm}>
+        <form className={css.signinForm} onSubmit={handleSubmit}>
             <label className={css.signinLabel}>
                 <input
                     type="email"
                     name="email"
                     placeholder="Email"
                     className={css.formControl}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                 />
             </label>
 
             <label className={`${css.signinLabel} ${css.passwordField}`}>
                 <input
-                    type="password"
+                    type={passwordVisible ? "text" : "password"}
                     name="password"
                     placeholder="Password"
                     className={css.formControl}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
-                <span className={css.passwordToggle}>
-                    <FaEyeSlash />
-                </span>                           
+                <span onClick={togglePasswordVisibility} className={css.passwordToggle}>
+                    {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                </span>                            
             </label>
+
+            {error && <div className={css.errorText}>{error}</div>}
             
             <div>
                 <button 
                     type="submit" 
                     className={css.signinBtn}
+                    disabled={isLoading}
                     >
-                        Sign In
+                        {isLoading ? 'Signing In...' : 'Sign In'}
                 </button>
                 <p className={css.btnText}>Don't have an account?{' '}
                     <Link to="/signup" className={css.signinSpan}>Sign Up</Link>
@@ -61,7 +95,7 @@ export const SigninForm = () => {
     </div>
 </div>
         <div>
-            <TransactionPage />
+            {/* <TransactionPage /> */}
         </div>
     </div>
   )
