@@ -26,7 +26,7 @@ export const SigninForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const resultAction = dispatch(logIn({ email, password }));
+        const resultAction = await dispatch(logIn({ email, password }));
         if (logIn.fulfilled.match(resultAction)) {
             const transactionType = 'expenses';
             navigate(`/transactions/${transactionType}`);

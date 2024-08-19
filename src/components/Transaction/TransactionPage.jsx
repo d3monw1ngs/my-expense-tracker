@@ -4,16 +4,18 @@ import { fetchTransactionsByType, addTransaction } from '../../redux/transaction
 import { selectAllTransaction, selectTransactionsStatus, selectTransactionsError } from '../../redux/transaction/transactionsSelectors';
 import { TransactionNav } from './TransactionNav';
 import css from './TransactionPage.module.css';
-import { Gauge } from 'components/Gauge/Gauge';
+// import { Gauge } from 'components/Gauge/Gauge';
 import { FiCalendar } from "react-icons/fi";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import arrowUp from '../../images/Arrow 15.svg';
+import { useParams } from 'react-router-dom';
 
-export const TransactionPage = ({ transactionsType }) => {
+export const TransactionPage = () => {
   const dispatch = useDispatch();
   const transactions = useSelector(selectAllTransaction);
   const status = useSelector(selectTransactionsStatus);
   const error = useSelector(selectTransactionsError);
+  const { transactionsType } = useParams();
 
   useEffect(() => {
     if (status === 'idle') {
@@ -101,7 +103,7 @@ export const TransactionPage = ({ transactionsType }) => {
                 <p className={css.expTitle}>Expense categories</p>
               </div>
               <div className={css.gaugeContainer}>
-                <Gauge />
+                {/* <Gauge /> */}
               </div>
             </div>
 

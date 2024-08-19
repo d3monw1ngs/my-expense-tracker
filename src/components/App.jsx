@@ -14,7 +14,7 @@ export const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/signin" element={<SigninForm />} />
-        <Route path="/transactions" element={<TransactionPage />} />
+        <Route path="/transactions/:transactionsType" element={<TransactionPage />} />
         {/* <Route path="/ExpenseForm" element={<ExpenseForm />} /> */}
       </Routes>
     </div>
