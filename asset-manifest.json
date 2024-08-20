@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/my-expense-tracker/static/css/main.f3badfef.css",
-    "main.js": "/my-expense-tracker/static/js/main.bdec2c61.js",
+    "main.css": "/my-expense-tracker/static/css/main.616cdecf.css",
+    "main.js": "/my-expense-tracker/static/js/main.551632ea.js",
     "static/media/bgimage.jpg": "/my-expense-tracker/static/media/bgimage.58a91cda48bfcfb70d5d.jpg",
     "static/media/Image.jpg": "/my-expense-tracker/static/media/Image.19b4b5b5483cde0609d8.jpg",
     "static/media/Image (2).jpg": "/my-expense-tracker/static/media/Image (2).c17f29aa3ddc8b3d404d.jpg",
     "static/media/Image (1).jpg": "/my-expense-tracker/static/media/Image (1).58f41965bf9da80b7aa9.jpg",
     "index.html": "/my-expense-tracker/index.html",
     "static/media/Arrow 15.svg": "/my-expense-tracker/static/media/Arrow 15.b95624a926dbb0ec6e848d7fc88ece95.svg",
-    "main.f3badfef.css.map": "/my-expense-tracker/static/css/main.f3badfef.css.map",
-    "main.bdec2c61.js.map": "/my-expense-tracker/static/js/main.bdec2c61.js.map"
+    "main.616cdecf.css.map": "/my-expense-tracker/static/css/main.616cdecf.css.map",
+    "main.551632ea.js.map": "/my-expense-tracker/static/js/main.551632ea.js.map"
   },
   "entrypoints": [
-    "static/css/main.f3badfef.css",
-    "static/js/main.bdec2c61.js"
+    "static/css/main.616cdecf.css",
+    "static/js/main.551632ea.js"
   ]
 }
