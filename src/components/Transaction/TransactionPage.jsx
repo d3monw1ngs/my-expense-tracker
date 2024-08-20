@@ -55,6 +55,7 @@ export const TransactionPage = () => {
     return acc;
   }, {});
 
+  // eslint-disable-next-line
   const gaugeData = Object.entries(expenseCategories).map(([category, amount]) => ({ category, amount }));
 
   if (status === 'loading') {
