@@ -1,17 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { 
+    setError,
     setTransactions,
     setStatus,
-    setError,
-} from './transactionsSlice';
+    addTransaction,
+    updateTransaction,
+    deleteTransaction
+ } from './transactionsSlice';
 
 axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 
 // Fetch transactions by type
-export const fetchTransactionsByType = createAsyncThunk(
-    'transactions/fetchTransactionsByType',
-    async ({ type }, thunkAPI) => {
+export const fetchTransactions = createAsyncThunk(
+    'transactions/fetchTransactions',
+    
+    async ({type}, thunkAPI) => {
         try {
             thunkAPI.dispatch(setStatus('loading'));
             const response = await axios.get(`transactions/${type}`);
@@ -21,44 +25,55 @@ export const fetchTransactionsByType = createAsyncThunk(
             thunkAPI.dispatch(setError(error.response.data));
             thunkAPI.dispatch(setStatus('failed'));
         }
+       
     }
 );
 
 // Create a new transaction
-export const addTransaction = createAsyncThunk(
-    'transactions/addTransaction',
-    async (transactionData, thunkAPI) => {
+export const addTransactionThunk = createAsyncThunk(
+    'transactions/addTransactionThunk',
+    async (newTransaction, thunkAPI) => {
         try {
-            const response = await axios.post('transactions', transactionData);
+            thunkAPI.dispatch(setStatus('loading'));
+            const response = await axios.post('transactions', newTransaction);
             thunkAPI.dispatch(addTransaction(response.data));
+            thunkAPI.dispatch(setStatus('succeeded'));
         } catch (error) {
             thunkAPI.dispatch(setError(error.response.data));
+            thunkAPI.dispatch(setStatus('failed'));
         }
     }
 );
 
 // Delete a transaction by ID
-export const deleteTransaction = createAsyncThunk(
-    'transactions/deleteTransaction',
-    async ({ type, id }, thunkAPI) => {
+export const deleteTransactionThunk = createAsyncThunk(
+    'transactions/deleteTransactionThunk',
+    async (transactionId, thunkAPI) => {
         try {
-            await axios.delete(`transactions/${type}`, { data: { id } });
-            thunkAPI.dispatch(deleteTransaction({ id }));
+            thunkAPI.dispatch(setStatus('loading'));
+            await axios.delete(`transactions/${transactionId}`);
+            thunkAPI.dispatch(deleteTransaction(transactionId));
+            thunkAPI.dispatch(setStatus('succeeded'));
         } catch (error) {
             thunkAPI.dispatch(setError(error.response.data));
+            thunkAPI.dispatch(setStatus('failed'));
         }
     }
 );
 
 // Update a transaction by ID
-export const updateTransaction = createAsyncThunk(
-    'transactions/updateTransaction',
-    async ({ type, id, updateData}, thunkAPI) => {
+export const updateTransactionThunk = createAsyncThunk(
+    'transactions/updateTransactionThunk',
+    async (updatedTransaction, thunkAPI) => {
         try {
-            const response = await axios.patch(`transactions/${type}/${id}`, updateData);
+            thunkAPI.dispatch(setStatus('loading'));
+            const { id } = updatedTransaction;
+            const response = await axios.patch(`transactions/${id}`, updatedTransaction);
             thunkAPI.dispatch(updateTransaction(response.data));
+            thunkAPI.dispatch(setStatus('succeeded'));
         } catch (error) {
             thunkAPI.dispatch(setError(error.response.data));
+            thunkAPI.dispatch(setStatus('failed'));
         }
     }
 );

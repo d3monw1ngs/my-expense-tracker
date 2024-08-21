@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTransactionsByType, addTransaction } from '../../redux/transaction/transactionsOperators';
+import { 
+  fetchTransactions, 
+  addTransactionThunk,
+} from '../../redux/transaction/transactionsOperators';
 import { selectAllTransaction, selectTransactionsStatus, selectTransactionsError } from '../../redux/transaction/transactionsSelectors';
 import { TransactionNav } from './TransactionNav';
 import css from './TransactionPage.module.css';
@@ -19,11 +22,13 @@ export const TransactionPage = () => {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchTransactionsByType({ type: transactionsType }));
+      dispatch(fetchTransactions({ type: transactionsType }));
     }
   }, [status, dispatch, transactionsType]);
 
   const calculateTotal = (type) => {
+    if (!transactions || !Array.isArray(transactions)) return 0;
+
     return transactions
       .filter(transaction => transaction.type === type)
       .reduce((total, transaction) => total + transaction.amount, 0)
@@ -45,7 +50,7 @@ export const TransactionPage = () => {
       amount: parseFloat(formData.get('amount')),
       comment: formData.get('comment'),
     };
-    dispatch(addTransaction(newTransaction));
+    dispatch(addTransactionThunk(newTransaction));
   };
 
   const expenseCategories = transactions.reduce((acc, transaction) => {

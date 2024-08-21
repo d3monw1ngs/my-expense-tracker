@@ -1,6 +1,11 @@
 import { createSelector } from "reselect";
 
-export const selectTransactionsState = (state) => state.transactions;
+export const selectTransactionsState = (state) => {
+    console.log(state);
+    return state.transactions.transactions;
+};
+
+export const selectTransactions = (state) => state.transactions?.transactions || [];
 
 export const selectAllTransaction = createSelector(
     [selectTransactionsState],
