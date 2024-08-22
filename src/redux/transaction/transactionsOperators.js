@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { 
-    setError,
-    setTransactions,
-    setStatus,
-    addTransaction,
-    updateTransaction,
-    deleteTransaction
- } from './transactionsSlice';
+// import { 
+//     setError,
+//     setTransactions,
+//     setStatus,
+//     addTransaction,
+//     updateTransaction,
+//     deleteTransaction
+//  } from './transactionsSlice';
 
 axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 
@@ -15,48 +15,45 @@ axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 export const fetchTransactions = createAsyncThunk(
     'transactions/fetchTransactions',
     
-    async ({type}, thunkAPI) => {
+    async (__, thunkAPI) => {
         try {
-            thunkAPI.dispatch(setStatus('loading'));
-            const response = await axios.get(`transactions/${type}`);
-            thunkAPI.dispatch(setTransactions(response.data));
-            thunkAPI.dispatch(setStatus('succeeded'));
+            const response = await axios.get(`transactions`);
+            console.log("Fetched transactions:", response.data);
+            return response.data;
         } catch (error) {
-            thunkAPI.dispatch(setError(error.response.data));
-            thunkAPI.dispatch(setStatus('failed'));
+            console.error("Fetch contacts error:", error.message);
+            return thunkAPI.rejectWithValue(error.message);
         }
        
     }
 );
 
 // Create a new transaction
-export const addTransactionThunk = createAsyncThunk(
-    'transactions/addTransactionThunk',
+export const addTransaction = createAsyncThunk(
+    'transactions/addTransaction',
     async (newTransaction, thunkAPI) => {
         try {
-            thunkAPI.dispatch(setStatus('loading'));
             const response = await axios.post('transactions', newTransaction);
-            thunkAPI.dispatch(addTransaction(response.data));
-            thunkAPI.dispatch(setStatus('succeeded'));
+            console.log("Added transaction:", response.data);
+            return response.data;
         } catch (error) {
-            thunkAPI.dispatch(setError(error.response.data));
-            thunkAPI.dispatch(setStatus('failed'));
+            console.error("Add transaction error:", error.message);
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );
 
 // Delete a transaction by ID
-export const deleteTransactionThunk = createAsyncThunk(
-    'transactions/deleteTransactionThunk',
+export const deleteTransaction = createAsyncThunk(
+    'transactions/deleteTransaction',
     async (transactionId, thunkAPI) => {
         try {
-            thunkAPI.dispatch(setStatus('loading'));
             await axios.delete(`transactions/${transactionId}`);
-            thunkAPI.dispatch(deleteTransaction(transactionId));
-            thunkAPI.dispatch(setStatus('succeeded'));
+            console.log("Deleted transaction:", transactionId);
+            return transactionId;
         } catch (error) {
-            thunkAPI.dispatch(setError(error.response.data));
-            thunkAPI.dispatch(setStatus('failed'));
+            console.error("Delete transaction error:", error.message);
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );
@@ -66,14 +63,13 @@ export const updateTransactionThunk = createAsyncThunk(
     'transactions/updateTransactionThunk',
     async (updatedTransaction, thunkAPI) => {
         try {
-            thunkAPI.dispatch(setStatus('loading'));
             const { id } = updatedTransaction;
             const response = await axios.patch(`transactions/${id}`, updatedTransaction);
-            thunkAPI.dispatch(updateTransaction(response.data));
-            thunkAPI.dispatch(setStatus('succeeded'));
+            console.log("Updated transaction:", response.data);
+            return response.data;
         } catch (error) {
-            thunkAPI.dispatch(setError(error.response.data));
-            thunkAPI.dispatch(setStatus('failed'));
+           console.error("Update transaction error:", error.message);
+           return thunkAPI.rejectWithValue(error.message);
         }
     }
 );

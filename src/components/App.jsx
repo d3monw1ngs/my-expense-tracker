@@ -1,28 +1,32 @@
 import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { HomePage } from "./Home/HomePage";
-import { SignupForm } from "./SignupForm/SignupForm";
-import { SigninForm } from "./SigninForm/SigninForm";
+import { SignupPage } from '../pages/SignupPage';
+import { SigninPage } from 'pages/SigninPage';
+import { PrivateRoute } from '../components/PrivateRoute/PrivateRoute';
+import { RestrictedRoute } from '../components/RestrictedRoute/RestrictedRoute';
 import { TransactionPage } from './Transaction/TransactionPage';
-import { selectIsAuthenticated } from '../redux/auth/authSelectors';
-import { useSelector } from 'react-redux';
-
 
 export const App = () => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/signin" element={<SigninForm />} />
-        <Route path="/transactions/:transactionsType" 
-               element={isAuthenticated ? <TransactionPage /> : <Navigate to="/transactionPage" />} />
-        <Route
-            path="/"
-            element={isAuthenticated ? <Navigate to="/transactions/incomes" /> : <Navigate to="/signin" />} />
-        {/* <Route path="/ExpenseForm" element={<ExpenseForm />} /> */}
+        <Route index element={<HomePage />} />
+        <Route 
+          path="/signup" 
+          element={
+            <RestrictedRoute component={SignupPage} redirectTo="/transactions" />} 
+          />
+        <Route 
+          path="/signin" 
+          element={
+            <RestrictedRoute component={SigninPage} redirectTo="/transactions" />} 
+          />
+        <Route 
+          path="/transactions/:transactionsType" 
+          element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
+          />
       </Routes>
     </div>
   );

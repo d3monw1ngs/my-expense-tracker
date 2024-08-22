@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   fetchTransactions, 
-  addTransactionThunk,
+  addTransaction,
 } from '../../redux/transaction/transactionsOperators';
 import { selectAllTransaction, selectTransactionsStatus, selectTransactionsError } from '../../redux/transaction/transactionsSelectors';
 import { TransactionNav } from './TransactionNav';
@@ -20,15 +20,23 @@ export const TransactionPage = () => {
   const error = useSelector(selectTransactionsError);
   const { transactionsType } = useParams();
 
+  const [formData, setFormData] = useState({
+    type: 'expense',
+    date: '',
+    time: '',
+    category: '',
+    amount: '',
+    comment: '',
+  });
+
   useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchTransactions({ type: transactionsType }));
+    if (transactionsType) {
+      dispatch(fetchTransactions(transactionsType));
     }
-  }, [status, dispatch, transactionsType]);
+  }, [dispatch, transactionsType]);
 
-  const calculateTotal = (type) => {
+   const calculateTotal = (type) => {
     if (!transactions || !Array.isArray(transactions)) return 0;
-
     return transactions
       .filter(transaction => transaction.type === type)
       .reduce((total, transaction) => total + transaction.amount, 0)
@@ -38,19 +46,29 @@ export const TransactionPage = () => {
   const totalIncome = calculateTotal('income');
   const totalExpense = calculateTotal('expense');
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-
     const newTransaction = {
-      type: formData.get('type'),
-      date: formData.get('date'),
-      time: formData.get('time'),
-      category: formData.get('category'),
-      amount: parseFloat(formData.get('amount')),
-      comment: formData.get('comment'),
+      ...formData,
+      amount: parseFloat(formData.amount),
     };
-    dispatch(addTransactionThunk(newTransaction));
+    dispatch(addTransaction(newTransaction));
+    setFormData({
+      type: 'expense',
+      date: '',
+      time: '',
+      category: '',
+      amount: '',
+      comment: '',
+    });    
   };
 
   const expenseCategories = transactions.reduce((acc, transaction) => {
@@ -109,7 +127,7 @@ export const TransactionPage = () => {
                 <p className={css.expTitle}>Expense categories</p>
               </div>
               <div className={css.gaugeContainer}>
-                {/* <Gauge /> */}
+                {/* <Gauge data={gaugeData} /> */}
               </div>
             </div>
 
@@ -140,7 +158,8 @@ export const TransactionPage = () => {
                   className={css.radio}
                   name="type"
                   value="expense"
-                  defaultChecked
+                  checked={formData.type === 'expense'}
+                  onChange={handleChange}
                 /> {' '}
                 <label>Expense</label>                  
       
@@ -149,6 +168,8 @@ export const TransactionPage = () => {
                   className={css.radio}
                   name="type"
                   value="income"
+                  checked={formData.type === 'income'}
+                  onChange={handleChange}
                 /> {' '}
                 <label>Income</label>
               </div>
@@ -159,7 +180,10 @@ export const TransactionPage = () => {
                     <div className={css.inputWrapper}>
                     <input 
                       className={css.date}
+                      name="date"
+                      value={formData.date}
                       placeholder="mm/dd/yyyy"
+                      onChange={handleChange}
                     />
                     <FiCalendar className={css.icon} />
                     </div>
@@ -169,7 +193,10 @@ export const TransactionPage = () => {
                     <div className={css.inputWrapper}>
                     <input 
                       className={css.time}
+                      name="time"
+                      value={formData.time}
                       placeholder="00:00:00"
+                      onChange={handleChange}
                      />
                     <AiOutlineClockCircle className={css.icon} />
                   </div>
@@ -180,17 +207,26 @@ export const TransactionPage = () => {
                   <p>Category</p>
                   <input 
                     className={css.inputText}
+                    name="category"
+                    value={formData.category}
                     placeholder="Enter category"
+                    onChange={handleChange}
                   />
                   <p>Sum</p>
                   <input 
                     className={css.inputText} 
+                    name="amount"
+                    value={formData.amount}
                     placeholder="Enter the sum"
+                    onChange={handleChange}
                     />
                   <p>Comment</p>
                   <input 
                     className={`${css.inputText} ${css.inputComment}`}
+                    name="comment"
+                    value={formData.comment}
                     placeholder="Enter the text"
+                    onChange={handleChange}
                     />
                 </div>
                 <button className={css.addBtn} type="submit">Add</button>    
