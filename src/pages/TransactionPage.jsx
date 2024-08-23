@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { 
   fetchTransactions, 
   addTransaction,
-} from '../../redux/transaction/transactionsOperators';
-import { selectAllTransaction, selectTransactionsStatus, selectTransactionsError } from '../../redux/transaction/transactionsSelectors';
-import { TransactionNav } from './TransactionNav';
+} from '../redux/transaction/transactionsOperators';
+import { selectAllTransaction, selectTransactionsStatus, selectTransactionsError } from '../redux/transaction/transactionsSelectors';
+import { TransactionNav } from '../components/Transaction/TransactionNav';
 import css from './TransactionPage.module.css';
 // import { Gauge } from 'components/Gauge/Gauge';
 import { FiCalendar } from "react-icons/fi";

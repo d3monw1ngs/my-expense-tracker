@@ -2,31 +2,38 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { HomePage } from "./Home/HomePage";
 import { SignupPage } from '../pages/SignupPage';
-import { SigninPage } from 'pages/SigninPage';
+import { SigninPage } from '../pages/SigninPage';
 import { PrivateRoute } from '../components/PrivateRoute/PrivateRoute';
 import { RestrictedRoute } from '../components/RestrictedRoute/RestrictedRoute';
-import { TransactionPage } from './Transaction/TransactionPage';
+import { TransactionPage } from '../pages/TransactionPage';
+import { ExpenseForm } from './Expense/ExpenseForm';
+import { IncomePage } from 'pages/IncomePage';
 
 export const App = () => {
 
   return (
     <div>
       <Routes>
-        <Route index element={<HomePage />} />
+        <Route path="/" index element={<HomePage />} />
         <Route 
-          path="/signup" 
+          path="signin" 
           element={
-            <RestrictedRoute component={SignupPage} redirectTo="/transactions" />} 
+            <RestrictedRoute component={SigninPage} redirectTo="/transactionPage" />} 
           />
         <Route 
-          path="/signin" 
+          path="/transactionPage" 
           element={
-            <RestrictedRoute component={SigninPage} redirectTo="/transactions" />} 
+            <RestrictedRoute component={TransactionPage} redirectTo="/signin" />} 
           />
         <Route 
-          path="/transactions/:transactionsType" 
-          element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
+          path="transactionPage/Expense" 
+          element={<PrivateRoute component={ExpenseForm} redirectTo="/signin" />} 
           />
+        <Route 
+          path="transactionPage/Income" 
+          element={<PrivateRoute component={IncomePage} redirectTo="/signin" />} 
+          />
+        <Route path="signup" element={<SignupPage />} />
       </Routes>
     </div>
   );
