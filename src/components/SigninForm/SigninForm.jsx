@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import css from './SigninForm.module.css';
-import { Navbar } from 'components/NavBar/Navbar';
-import { DecorationTab } from 'components/DecorationTab/DecorationTab';
-import { Link } from 'react-router-dom';
-// import { TransactionPage } from 'components/Transaction/TransactionPage';
 import { logIn } from '../../redux/auth/authOperations';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLoading, selectAuthError } from '../../redux/auth/authSelectors';
-
 
 export const SigninForm = () => {
     const [email, setEmail] = useState('');
@@ -28,29 +23,23 @@ export const SigninForm = () => {
         e.preventDefault();
         const resultAction = await dispatch(logIn({ email, password }));
         if (logIn.fulfilled.match(resultAction)) {
-            const transactionType = 'expenses';
-            navigate(`/transactions/${transactionType}`);
+            navigate(`/users/current`);
         } else {
             console.error('Login failed', error);
         }
     };
 
   return (
-    <div className={css.signinContainer}>
-        <Navbar />
-        <div className={css.signinWrapper}>
-            <div className={css.signinImageWrapper}>
-                <div>
-                    <DecorationTab />
-                </div>      
-            </div>
+    <div>
+        <div>
         <div className={css.signinFormContainer}>  
         <div className={css.siDetails}>
             <h1>Sign In</h1>
             <p className={css.signinText}>Welcome back to effortless expense tracking! Your financial
                 dashboard awaits.
             </p>
-        </div>      
+        </div>   
+
         <form className={css.signinForm} onSubmit={handleSubmit}>
             <label className={css.signinLabel}>
                 <input
@@ -94,9 +83,6 @@ export const SigninForm = () => {
         </form>            
     </div>
 </div>
-        <div>
-            {/* <TransactionPage /> */}
-        </div>
-    </div>
-  )
-}
+</div>
+  );
+};

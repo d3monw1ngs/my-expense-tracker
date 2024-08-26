@@ -6,8 +6,7 @@ import { SigninPage } from '../pages/SigninPage';
 import { PrivateRoute } from '../components/PrivateRoute/PrivateRoute';
 import { RestrictedRoute } from '../components/RestrictedRoute/RestrictedRoute';
 import { TransactionPage } from '../pages/TransactionPage';
-import { ExpenseForm } from './Expense/ExpenseForm';
-import { IncomePage } from 'pages/IncomePage';
+import { IncomePage } from '../pages/IncomePage';
 
 export const App = () => {
 
@@ -18,22 +17,27 @@ export const App = () => {
         <Route 
           path="signin" 
           element={
-            <RestrictedRoute component={SigninPage} redirectTo="/transactionPage" />} 
+            <RestrictedRoute component={SigninPage} redirectTo="/users/current" />} 
           />
         <Route 
-          path="/transactionPage" 
+          path="signup" 
           element={
-            <RestrictedRoute component={TransactionPage} redirectTo="/signin" />} 
+            <RestrictedRoute component={SignupPage} redirectTo="/signin" />} 
           />
         <Route 
-          path="transactionPage/Expense" 
-          element={<PrivateRoute component={ExpenseForm} redirectTo="/signin" />} 
+          path="transactionPage" 
+          element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
+          />
+          {/* Nested Routes for Expense and Income */}
+        <Route 
+          path="transactions/:transactionType" 
+          element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
           />
         <Route 
-          path="transactionPage/Income" 
-          element={<PrivateRoute component={IncomePage} redirectTo="/signin" />} 
-          />
-        <Route path="signup" element={<SignupPage />} />
+          path="TransactionPage/Income"
+          element={<PrivateRoute component={IncomePage} redirectTo="/signin" />}        
+        />
+        <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </div>
   );
