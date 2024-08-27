@@ -1,13 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-// import { 
-//     setError,
-//     setTransactions,
-//     setStatus,
-//     addTransaction,
-//     updateTransaction,
-//     deleteTransaction
-//  } from './transactionsSlice';
 
 axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 

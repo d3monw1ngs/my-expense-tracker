@@ -6,8 +6,8 @@ import images1 from '../../images/Image (1).jpg';
 import images2 from '../../images/Image (2).jpg';
 import { Navbar } from '../NavBar/Navbar';
 import { DecorationTab } from '../DecorationTab/DecorationTab';
-import { ExpenseForm } from 'components/Expense/ExpenseForm';
-import { IncomeForm } from 'components/Income/IncomeForm';
+// import { ExpenseForm } from 'components/Expense/ExpenseForm';
+// import { IncomeForm } from 'components/Income/IncomeForm';
 // import bgImage from '../../images/bgimage.jpg';
 
 
@@ -66,8 +66,8 @@ export const HomePage = () => {
         </div>
       </div>
      
-      <ExpenseForm />
-      <IncomeForm />
+      {/* <ExpenseForm /> */}
+      {/* <IncomeForm /> */}
     </div>    
     
   );
