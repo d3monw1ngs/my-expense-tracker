@@ -7,6 +7,7 @@ import { PrivateRoute } from '../components/PrivateRoute/PrivateRoute';
 import { RestrictedRoute } from '../components/RestrictedRoute/RestrictedRoute';
 import { TransactionPage } from '../pages/TransactionPage';
 import { IncomePage } from '../pages/IncomePage';
+import { ExpensePage } from 'pages/ExpensePage';
 
 export const App = () => {
 
@@ -34,8 +35,12 @@ export const App = () => {
           element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
           />
         <Route 
-          path="TransactionPage/Income"
+          path="/income"
           element={<PrivateRoute component={IncomePage} redirectTo="/signin" />}        
+        />
+        <Route 
+          path="/expense"
+          element={<PrivateRoute component={ExpensePage} redirectTo="/signin" />}        
         />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>

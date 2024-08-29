@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import css from './SigninForm.module.css';
 import { logIn } from '../../redux/auth/authOperations';
@@ -13,7 +13,7 @@ export const SigninForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isLoading = useSelector(selectIsLoading);
-    const error = useSelector(selectAuthError);
+    const authError = useSelector(selectAuthError);
 
     const togglePasswordVisibility = () => {
         setPassWordVisible(prevState => !prevState);
@@ -21,13 +21,24 @@ export const SigninForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const resultAction = await dispatch(logIn({ email, password }));
-        if (logIn.fulfilled.match(resultAction)) {
-            navigate(`/users/current`);
-        } else {
-            console.error('Login failed', error);
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
+        try {
+        const userInfo = await dispatch(logIn({ email, password })).unwrap();
+        if (userInfo) {
+            navigate('/transactions');
+        }
+        } catch (error) {
+            console.error('Failed to login:', error);
         }
     };
+
+    useEffect(() => {
+        if (authError) {
+            console.log('Authentication error:', authError);
+        }
+    }, [authError]);
 
   return (
     <div>
@@ -66,7 +77,7 @@ export const SigninForm = () => {
                 </span>                            
             </label>
 
-            {error && <div className={css.errorText}>{error}</div>}
+            {authError && <div className={css.errorText}>{authError}</div>}
             
             <div>
                 <button 

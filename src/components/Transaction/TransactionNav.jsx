@@ -13,8 +13,16 @@ export const TransactionNav = () => {
                 <h1 className={css.title}>EXPENSETRACKER</h1>
             </Link>
             <div className={css.navBtnContainer}>
-              <button className={css.navBtn}>All Expense</button>
-              <button className={css.navBtn}>All Income</button>
+              <button className={css.navBtn}>
+                <Link to="/expense">
+                  All Expense                
+                </Link>
+              </button>
+              <button className={css.navBtn}>
+                <Link to="/income">
+                  All Income
+                </Link>
+              </button>
             </div>
             <UserNav />
         </nav>

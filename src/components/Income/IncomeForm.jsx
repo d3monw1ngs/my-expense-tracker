@@ -4,7 +4,7 @@ import css from './IncomeForm.module.css';
 import arrowUp from '../../images/Arrow 15.svg';
 import { IncomeTable } from 'components/TableForm/IncomeTable';
 
-export const IncomeForm = () => {
+export const IncomeForm = ({ totalIncome, totalExpense }) => {
   return (
     <div>
         <TransactionNav />
@@ -23,7 +23,7 @@ export const IncomeForm = () => {
                         </div>
                         <div className={css.inDetails}>
                             <p className={css.inTitle}>Total Income</p>
-                            <p className={css.inAmount}>$909.00</p>
+                            <p className={css.inAmount}>${totalIncome}</p>
                         </div>
                     </div>
                     <div className={css.iconWrapper}>
@@ -32,7 +32,7 @@ export const IncomeForm = () => {
                         </div>
                         <div className={css.exDetails}>
                             <p className={css.exTitle}>Total Expense</p>
-                            <p className={css.exAmount}>$259.00</p>
+                            <p className={css.exAmount}>${totalExpense}</p>
                         </div>
                     </div>
                 </div>

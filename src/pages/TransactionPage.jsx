@@ -5,7 +5,6 @@ import { selectAllTransaction, selectTransactionsStatus, selectTransactionsError
 import { TransactionNav } from '../components/Transaction/TransactionNav';
 import { TransactionForm } from '../components/Transaction/TransactionForm';
 import css from './TransactionPage.module.css';
-// import { Gauge } from 'components/Gauge/Gauge';
 import arrowUp from '../images/Arrow 15.svg';
 import { useParams } from 'react-router-dom';
 
