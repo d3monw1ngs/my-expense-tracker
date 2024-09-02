@@ -14,12 +14,12 @@ export const TransactionNav = () => {
             </Link>
             <div className={css.navBtnContainer}>
               <button className={css.navBtn}>
-                <Link to="/expense">
+                <Link to="/expense" className={css.btnLink}>
                   All Expense                
                 </Link>
               </button>
               <button className={css.navBtn}>
-                <Link to="/income">
+                <Link to="/income" className={css.btnLink}>
                   All Income
                 </Link>
               </button>

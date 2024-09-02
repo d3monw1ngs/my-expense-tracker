@@ -51,4 +51,13 @@
     color: #fafafa;
     background-color: inherit;
 }
-
+.btnLink {
+    text-decoration: none;
+    color: #fafafa;
+}
+.navBtn:hover {
+    background-color: #0EF387;
+}
+.btnLink:hover {
+    color: #0C0D0D;
+}

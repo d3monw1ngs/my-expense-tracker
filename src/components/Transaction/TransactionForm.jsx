@@ -5,10 +5,13 @@ import css from './TransactionForm.module.css';
 import { FiCalendar } from 'react-icons/fi';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import { CalendarComponent } from '../Calendar/CalendarComponent';
 
 export const TransactionForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isCalendarVisible, setCalendarVisible] = useState(false);
+    const [date, setDate] = useState(new Date());
 
     const [formData, setFormData] = useState({
         type: 'expense',
@@ -18,6 +21,15 @@ export const TransactionForm = () => {
         amount: '',
         comment: '',
     });
+
+    const toggleCalendar = () => {
+        setCalendarVisible(prevState => !prevState);
+    };
+
+    const handleDateChange = date => {
+        setDate(date);
+        setCalendarVisible(false);
+      };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -80,7 +92,8 @@ export const TransactionForm = () => {
                         placeholder="mm/dd/yyyy"
                         onChange={handleChange}
                     />
-                    <FiCalendar className={css.icon}/>
+                    <FiCalendar className={css.icon} onClick={toggleCalendar} />
+                    <CalendarComponent isVisible={isCalendarVisible} onClick={handleDateChange} />
                 </div>
             </div>
             <div className={css.timeInput}>

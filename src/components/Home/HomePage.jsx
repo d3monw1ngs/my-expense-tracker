@@ -6,6 +6,7 @@ import images1 from '../../images/Image (1).jpg';
 import images2 from '../../images/Image (2).jpg';
 import { Navbar } from '../NavBar/Navbar';
 import { DecorationTab } from '../DecorationTab/DecorationTab';
+import { TransactionPage } from 'pages/TransactionPage';
 // import { ExpenseForm } from 'components/Expense/ExpenseForm';
 // import { IncomeForm } from 'components/Income/IncomeForm';
 // import bgImage from '../../images/bgimage.jpg';
@@ -65,7 +66,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-     
+      <TransactionPage />
       {/* <ExpenseForm /> */}
       {/* <IncomeForm /> */}
     </div>    

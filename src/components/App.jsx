@@ -26,7 +26,7 @@ export const App = () => {
             <RestrictedRoute component={SignupPage} redirectTo="/signin" />} 
           />
         <Route 
-          path="transactionPage" 
+          path="transactions" 
           element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
           />
           {/* Nested Routes for Expense and Income */}
