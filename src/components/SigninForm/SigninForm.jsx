@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import css from './SigninForm.module.css';
 import { logIn } from '../../redux/auth/authOperations';
@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLoading, selectAuthError } from '../../redux/auth/authSelectors';
 
-export const SigninForm = () => {
+export const SigninForm = React.memo(() => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPassWordVisible] = useState(false);
@@ -19,20 +19,19 @@ export const SigninForm = () => {
         setPassWordVisible(prevState => !prevState);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
 
         try {
-        const userInfo = await dispatch(logIn({ email, password })).unwrap();
-        if (userInfo) {
+            // Dispatch the login action with current state values
+            const userInfo = await dispatch(logIn({ email, password })).unwrap();
+            if (userInfo) {
             navigate('/transactions');
-        }
+            }
         } catch (error) {
             console.error('Failed to login:', error);
         }
-    };
+    }, [dispatch, email, password, navigate]);
 
     useEffect(() => {
         if (authError) {
@@ -96,4 +95,4 @@ export const SigninForm = () => {
 </div>
 </div>
   );
-};
+});
