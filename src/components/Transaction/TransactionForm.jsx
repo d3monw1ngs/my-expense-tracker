@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addTransaction } from '../../redux/transaction/transactionsOperators';
 import css from './TransactionForm.module.css';
+import { selectAllTransaction } from '../../redux/transaction/transactionsSelectors';
 import { FiCalendar } from 'react-icons/fi';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { CalendarComponent } from '../Calendar/CalendarComponent';
+import { TransactionNav } from './TransactionNav';
+import arrowUp from '../../images/Arrow 15.svg';
 
 export const TransactionForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isCalendarVisible, setCalendarVisible] = useState(false);
     const [date, setDate] = useState(new Date());
+    const transactions = useSelector(selectAllTransaction);
 
     const [formData, setFormData] = useState({
         type: 'expense',
@@ -57,7 +61,78 @@ export const TransactionForm = () => {
         navigate('/transactions/expenses');
     };
 
+    const calculateTotal = (type) => {
+          if (!transactions || !Array.isArray(transactions)) return 0;
+          return transactions
+            .filter(transaction => transaction.type === type)
+            .reduce((total, transaction) => total + transaction.amount, 0)
+            .toFixed(2);
+        };
+      
+        const totalIncome = calculateTotal('income');
+        const totalExpense = calculateTotal('expense');
+
   return (
+    <div>
+         <TransactionNav />
+        <div className={css.transactionContainer}>
+          <div className={css.transactionExpWrapper}>
+          <div className={css.transExpLog}>
+            <h3>Expense Log</h3>
+            <p>Capture and organize every penny spent with ease! A clear view of your financial habits
+              at your fingertips.
+            </p>
+          </div>
+          <div className={css.inExContainer}>
+            <div className={css.incomeDetails}>
+              <div className={css.arrow}>
+                <img src={arrowUp} alt="arrow up" />
+              </div>
+              <div className={css.incomeWrap}>
+                <p className={css.text}>Total Income</p>
+                <p className={css.amount}>${totalIncome}</p>
+              </div>
+            </div>
+            <div className={css.expenseDetails}>
+            <div className={css.arrowDown}>
+                <img src={arrowUp} alt="arrow down" />
+              </div>
+              <div className={css.expenseWrap}>
+                <p className={css.text}>Total Expense</p>
+                <p className={css.amount}>${totalExpense}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={css.expenseContainer}>
+            <div className={css.expCategory}>
+              <div>
+                <p className={css.expTitle}>Expense categories</p>
+              </div>
+              <div className={css.gaugeContainer}>
+                {/* <Gauge data={gaugeData} /> */}
+              </div>
+            </div>
+
+            <div className={css.expList}>
+              <ul>
+                <li className={css.expListItems}>
+                  <div className={css.circle}></div>
+                  Category 1 <span>0%</span>
+                </li>
+                <li className={css.expListItems}>
+                  <div className={css.circle}></div>
+                  Category 2 <span>0%</span>
+                </li>
+                <li className={css.expListItems}>
+                  <div className={css.circle}></div>
+                  Category 3 <span>0%</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          </div>
+    </div>   
     <form onSubmit={handleSubmit} className={css.formContainer}>
         <div>
             <input 
@@ -68,7 +143,7 @@ export const TransactionForm = () => {
                 checked={formData.type === 'expense'}
                 onChange={handleChange}
             /> {' '}
-            <label>Expense</label>
+            <label className={css.label}>Expense</label>
 
             <input 
                 type="radio"
@@ -78,7 +153,7 @@ export const TransactionForm = () => {
                 checked={formData.type === 'income'}
                 onChange={handleChange}
             /> {' '}
-            <label>Income</label>
+            <label className={css.label}>Income</label>
         </div>
 
         <div className={css.dataContainer}>
@@ -112,7 +187,7 @@ export const TransactionForm = () => {
         </div>
 
         <div className={css.inputFields}>
-            <p>Category</p>
+            <p className={css.label}>Category</p>
             <input 
                 className={css.inputText}
                 name="category"
@@ -120,7 +195,7 @@ export const TransactionForm = () => {
                 placeholder="Enter category"
                 onChange={handleChange}
              />
-            <p>Sum</p>
+            <p className={css.label}>Sum</p>
             <input 
                 className={css.inputText} 
                 name="amount"
@@ -128,7 +203,7 @@ export const TransactionForm = () => {
                 placeholder="Enter the sum"
                 onChange={handleChange}
             />
-            <p>Comment</p>
+            <p className={css.label}>Comment</p>
             <input 
                 className={`${css.inputText} ${css.inputComment}`}
                 name="comment"
@@ -139,5 +214,6 @@ export const TransactionForm = () => {
        </div>
        <button className={css.addBtn} type="submit">Add</button>    
     </form>    
+</div>
   );
 };
