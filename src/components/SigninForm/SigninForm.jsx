@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import css from './SigninForm.module.css';
 import { logIn } from '../../redux/auth/authOperations';
@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLoading, selectAuthError } from '../../redux/auth/authSelectors';
 
-export const SigninForm = React.memo(() => {
+export const SigninForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPassWordVisible] = useState(false);
@@ -19,19 +19,20 @@ export const SigninForm = React.memo(() => {
         setPassWordVisible(prevState => !prevState);
     };
 
-    const handleSubmit = useCallback(async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             // Dispatch the login action with current state values
             const userInfo = await dispatch(logIn({ email, password })).unwrap();
+
             if (userInfo) {
-            navigate('/transactions');
+                navigate('/transactions');
             }
         } catch (error) {
             console.error('Failed to login:', error);
         }
-    }, [dispatch, email, password, navigate]);
+    };
 
     useEffect(() => {
         if (authError) {
@@ -95,4 +96,4 @@ export const SigninForm = React.memo(() => {
 </div>
 </div>
   );
-});
+};

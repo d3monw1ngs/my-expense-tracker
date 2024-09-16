@@ -1,13 +1,10 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Navbar } from '../components/NavBar/Navbar';
 import { DecorationTab } from 'components/DecorationTab/DecorationTab';
 import { SigninForm } from '../components/SigninForm/SigninForm';
 import css from './SigninPage.module.css';
 
 export const SigninPage = () => {
-  const dispatch = useDispatch();
-
   return (
     <div className={css.signinContainer}>
         <Navbar />
@@ -15,7 +12,7 @@ export const SigninPage = () => {
           <div className={css.signinImageWrapper}>
             <DecorationTab />
           </div>
-          <SigninForm dispatch={dispatch}/>
+          <SigninForm />
         </div>
     </div>
   );

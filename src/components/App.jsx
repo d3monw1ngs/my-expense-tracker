@@ -28,20 +28,14 @@ export const App = () => {
         <Route 
           path="transactions" 
           element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
-          />
-          {/* Nested Routes for Expense and Income */}
+        >
+         <Route
+          path="expense"
+          element={<ExpensePage />} />
         <Route 
-          path="transactions/:transactionType" 
-          element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
-          />
-        <Route 
-          path="/income"
-          element={<PrivateRoute component={IncomePage} redirectTo="/signin" />}        
-        />
-        <Route 
-          path="/expense"
-          element={<PrivateRoute component={ExpensePage} redirectTo="/signin" />}        
-        />
+          path= "income"
+          element={<IncomePage />} />
+        </Route>
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </div>
