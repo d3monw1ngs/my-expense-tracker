@@ -14,12 +14,12 @@ export const TransactionForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isCalendarVisible, setCalendarVisible] = useState(false);
-    const [date, setDate] = useState(new Date());
+    const [setDate] = useState(new Date());
     const transactions = useSelector(selectAllTransaction);
 
     const [formData, setFormData] = useState({
         type: 'expense',
-        date: '',
+        date: new Date().toLocaleDateString(),
         time: '',
         category: '',
         amount: '',
@@ -32,6 +32,10 @@ export const TransactionForm = () => {
 
     const handleDateChange = date => {
         setDate(date);
+        setFormData(prevState => ({
+          ...prevState,
+          date: date.toLocaleDateString(),
+        }));
         setCalendarVisible(false);
       };
 
@@ -45,11 +49,18 @@ export const TransactionForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!formData.category || !formData.amount) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
         const newTransaction = {
             ...formData,
             amount: parseFloat(formData.amount),
         };
+
         dispatch(addTransaction(newTransaction));
+
         setFormData({
             type: 'expense',
             date: '',
@@ -71,68 +82,69 @@ export const TransactionForm = () => {
       
         const totalIncome = calculateTotal('income');
         const totalExpense = calculateTotal('expense');
+    
+    const categories = [
+      { name: "Category 1", percentage: "0%" },
+      { name: "Category 2", percentage: "0%" },
+      { name: "Category 3", percentage: "0%" },
+    ];
 
   return (
     <div>
          <TransactionNav />
         <div className={css.transactionContainer}>
           <div className={css.transactionExpWrapper}>
-          <div className={css.transExpLog}>
-            <h3>Expense Log</h3>
-            <p>Capture and organize every penny spent with ease! A clear view of your financial habits
-              at your fingertips.
-            </p>
-          </div>
-          <div className={css.inExContainer}>
-            <div className={css.incomeDetails}>
-              <div className={css.arrow}>
-                <img src={arrowUp} alt="arrow up" />
-              </div>
+            <div className={css.transExpLog}>
+              <h3>Expense Log</h3>
+              <p>Capture and organize every penny spent with ease! A clear view of your financial habits
+                at your fingertips.
+              </p>
+            </div>
+
+            <div className={css.inExContainer}>
+              <div className={css.incomeDetails}>
+                <div className={css.arrow}>
+                  <img src={arrowUp} alt="arrow up" />
+                </div>
               <div className={css.incomeWrap}>
                 <p className={css.text}>Total Income</p>
                 <p className={css.amount}>${totalIncome}</p>
               </div>
             </div>
+
             <div className={css.expenseDetails}>
-            <div className={css.arrowDown}>
+              <div className={css.arrowDown}>
                 <img src={arrowUp} alt="arrow down" />
               </div>
               <div className={css.expenseWrap}>
                 <p className={css.text}>Total Expense</p>
                 <p className={css.amount}>${totalExpense}</p>
               </div>
-            </div>
-          </div>
+            </div>         
 
-          <div className={css.expenseContainer}>
-            <div className={css.expCategory}>
-              <div>
-                <p className={css.expTitle}>Expense categories</p>
-              </div>
-              <div className={css.gaugeContainer}>
+            <div className={css.expenseContainer}>
+              <div className={css.expCategory}>
+                <div>
+                  <p className={css.expTitle}>Expense categories</p>
+                </div>
+                <div className={css.gaugeContainer}>
                 {/* <Gauge data={gaugeData} /> */}
+                </div>
+              </div>
+
+              <div className={css.expList}>
+                <ul>
+                  {categories.map((category, index) => (
+                    <li key={index} className={css.expListItems}>
+                      <div className={css.circle}></div>
+                      {category.name} <span>{category.percentage}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
-
-            <div className={css.expList}>
-              <ul>
-                <li className={css.expListItems}>
-                  <div className={css.circle}></div>
-                  Category 1 <span>0%</span>
-                </li>
-                <li className={css.expListItems}>
-                  <div className={css.circle}></div>
-                  Category 2 <span>0%</span>
-                </li>
-                <li className={css.expListItems}>
-                  <div className={css.circle}></div>
-                  Category 3 <span>0%</span>
-                </li>
-              </ul>
-            </div>
           </div>
-          </div>
-    </div>   
+      </div>   
     <form onSubmit={handleSubmit} className={css.formContainer}>
         <div>
             <input 
@@ -214,6 +226,7 @@ export const TransactionForm = () => {
        </div>
        <button className={css.addBtn} type="submit">Add</button>    
     </form>    
+</div>
 </div>
   );
 };

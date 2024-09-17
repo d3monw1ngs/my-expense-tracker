@@ -13,19 +13,19 @@ export const TransactionNav = () => {
                 <h1 className={css.title}>EXPENSETRACKER</h1>
             </Link>
             <div className={css.navBtnContainer}>
-              <button className={css.navBtn}>
                 <Link to="/expense" className={css.btnLink}>
-                  All Expense                
+                  <button className={css.navBtn}>
+                    All Expense                
+                  </button>
                 </Link>
-              </button>
-              <button className={css.navBtn}>
                 <Link to="/income" className={css.btnLink}>
-                  All Income
+                  <button className={css.navBtn}>
+                    All Income
+                  </button>
                 </Link>
-              </button>
             </div>
             <UserNav />
         </nav>
     </div>
-  )
-}
+  );
+};
