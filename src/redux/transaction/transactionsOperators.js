@@ -13,7 +13,7 @@ export const fetchTransactions = createAsyncThunk(
             console.log("Fetched transactions:", response.data);
             return response.data;
         } catch (error) {
-            console.error("Fetch contacts error:", error.message);
+            console.error("Fetch transactions error:", error.message);
             return thunkAPI.rejectWithValue(error.message);
         }
        
