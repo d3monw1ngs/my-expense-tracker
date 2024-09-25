@@ -66,7 +66,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-      <TransactionPage />
+      {/* <TransactionPage /> */}
       {/* <ExpenseForm /> */}
       {/* <IncomeForm /> */}
     </div>    

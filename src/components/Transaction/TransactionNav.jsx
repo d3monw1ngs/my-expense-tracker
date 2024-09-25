@@ -1,28 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import css from './TransactionNav.module.css';
 import logo from '../../images/Icon.png';
 import { UserNav } from 'components/NavBar/UserNav';
 
 export const TransactionNav = () => {
+  const navigate = useNavigate();
+
+  const handleNavigateToExpense = () => {
+    navigate('/ExpensePage');
+  };
+
+  const handleNavigateToIncome = () => {
+    navigate('/income');
+  };
+
+  const handleNavigateToTransactonForm = () => {
+    navigate('/transactionForm');
+  };
+
+
   return (
     <div className={css.transNavContainer}>
         <nav className={css.navbar}>
-            <Link to="/" className={css.navLink}>
+            <div onClick={handleNavigateToTransactonForm} className={css.navLink}>
                 <img src={logo} alt="Logo" className={css.logo} />
                 <h1 className={css.title}>EXPENSETRACKER</h1>
-            </Link>
+            </div>
             <div className={css.navBtnContainer}>
-                <Link to="/expense" className={css.btnLink}>
-                  <button className={css.navBtn}>
+                <button className={css.navBtn} onClick={handleNavigateToExpense}>
                     All Expense                
-                  </button>
-                </Link>
-                <Link to="/income" className={css.btnLink}>
-                  <button className={css.navBtn}>
+                </button>
+                <button className={css.navBtn} onClick={handleNavigateToIncome}>
                     All Income
-                  </button>
-                </Link>
+                </button>
             </div>
             <UserNav />
         </nav>

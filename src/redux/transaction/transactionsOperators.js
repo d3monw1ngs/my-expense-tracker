@@ -7,7 +7,7 @@ axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 export const fetchTransactions = createAsyncThunk(
     'transactions/fetchTransactions',
     
-    async (__, thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
             const response = await axios.get(`transactions`);
             console.log("Fetched transactions:", response.data);

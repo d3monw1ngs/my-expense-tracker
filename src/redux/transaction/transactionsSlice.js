@@ -39,7 +39,7 @@ export const transactionsSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(deleteTransaction.fulfilled, (state, action) => {
-                state.status = 'failed';
+                state.status = 'succeeded';
                 state.items = state.items.filter(transaction => transaction.id !== action.payload);
             })
             .addCase(deleteTransaction.rejected, (state, action) => {

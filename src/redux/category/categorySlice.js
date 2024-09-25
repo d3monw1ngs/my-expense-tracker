@@ -37,7 +37,7 @@ export const categoriesSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(deleteCategories.fulfilled, (state, action) => {
-                state.status = 'failed';
+                state.status = 'succeeded';
                 state.items = state.items.filter(category => category.id !== action.payload);
             })
             .addCase(deleteCategories.rejected, (state, action) => {

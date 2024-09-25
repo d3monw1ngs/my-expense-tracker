@@ -1,12 +1,3 @@
-import { createSelector } from "reselect";
-
-export const selectTransactions = (state) => state.transactions?.transactions || [];
-
-export const selectAllTransaction = createSelector(
-    [selectTransactions],
-    (transactions) => transactions
-);
-
-export const selectTransactionsStatus = (state) => state.transactions?.status || 'idle';
-
-export const selectTransactionsError = (state) => state.transactions?.error || null;
+export const getTransactions = state => state.transactions.items;
+export const getLoader = state => state.transactions.isLoading;
+export const getError = state => state.transactions.error;

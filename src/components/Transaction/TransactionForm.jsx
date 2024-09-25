@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTransaction } from '../../redux/transaction/transactionsOperators';
+import { addTransaction, fetchTransactions } from '../../redux/transaction/transactionsOperators';
+import { getTransactions, getLoader, getError } from '../../redux/transaction/transactionsSelectors';
 import css from './TransactionForm.module.css';
-import { selectAllTransaction } from '../../redux/transaction/transactionsSelectors';
 import { FiCalendar } from 'react-icons/fi';
 import { AiOutlineClockCircle } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
 import { TransactionNav } from './TransactionNav';
 import arrowUp from '../../images/Arrow 15.svg';
+
 
 const calculateCategoryPercentages = (transactions) => {
   const totalExpense = transactions
@@ -21,19 +21,17 @@ const calculateCategoryPercentages = (transactions) => {
     return acc;
   }, {});
 
-  const categoryPercentages = Object.entries(categorySums).map(([category, sum]) => ({
+  return Object.entries(categorySums).map(([category, sum]) => ({
     category,
     percentage: ((sum / totalExpense) * 100).toFixed(2),
   }));
+};
 
-  return categoryPercentages;
-}
-
-
-export const TransactionForm = () => {
+export const TransactionForm = ({ transactionType }) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const transactions = useSelector(selectAllTransaction);
+    const transactions = useSelector(getTransactions);
+    const loading = useSelector(getLoader);
+    const error = useSelector(getError);
     const categoryPercentages = calculateCategoryPercentages(transactions);
 
     const [formData, setFormData] = useState({
@@ -45,6 +43,12 @@ export const TransactionForm = () => {
         comment: '',
     });
 
+    useEffect(() => {
+      if (transactionType) {
+        dispatch(fetchTransactions(transactionType)); //Fetch transaction when type changes
+      }
+    }, [dispatch, transactionType]);
+
     // Handle form field changes
     const handleChange = e => {
       const { name, value } = e.target;
@@ -55,22 +59,28 @@ export const TransactionForm = () => {
     };
 
     // Handle form submit
-    const handleSubmit = e => {
+    const handleSubmit = (e) => {
       e.preventDefault();
 
+      // Validate form
       if (!formData.category || !formData.amount) {
         alert("Please fill in all required fields.");
         return;
       }
 
+      // Prepare new transaction
       const newTransaction = {
         ...formData,
         amount: parseFloat(formData.amount),
       };
 
+      // Dispatch action to add transaction
       dispatch(addTransaction(newTransaction));
+      resetForm();
+    };
 
-      // Reset the form after submission
+    // Reset form after submission
+    const resetForm = () => {
       setFormData({
         type: 'expense',
         date: '',
@@ -79,8 +89,6 @@ export const TransactionForm = () => {
         amount: '',
         comment: '',
       });
-
-      navigate('/transactions/expenses');
     };
 
     const calculateTotal = (type) => {
@@ -93,8 +101,11 @@ export const TransactionForm = () => {
 
     const totalIncome = calculateTotal('income');
     const totalExpense = calculateTotal('expense');
-    
 
+      // Render form and handle loading and error status
+      if (loading === 'loading') return <div>Loading transactions...</div>;
+      if (loading === 'failed') return <div>Error loading transactions: {error}</div>;    
+  
   return (
     <div>
       <TransactionNav />
@@ -128,7 +139,7 @@ export const TransactionForm = () => {
               </div>
             </div>
 
-            {/* this is the gauge part with expense statistics */}
+            {/* Expense statistics */}
             <div className={css.categoriesContainer}>
               <div className={css.textAndDonut}>
                 <p className={css.catText}>Expenses categories</p>
@@ -140,7 +151,7 @@ export const TransactionForm = () => {
                 <ul className={css.list}>
                   {categoryPercentages.map((cat, index) => (
                     <li key={index}>
-                      <span>{cat.category}</span><span>{cat.percentage}%</span>
+                      <span>{cat.category}</span><span className={css.spanTag}>{cat.percentage}%</span>
                     </li>
                   ))}
                 </ul>
@@ -160,7 +171,7 @@ export const TransactionForm = () => {
               checked={formData.type === 'income'}
               onChange={handleChange}
               className={css.radioChoice}></input>
-            <label for="income" id="income" className={css.radioLabel}>Income</label>
+            <label htmlFor="income" className={css.radioLabel}>Income</label>
             <input 
               type="radio" 
               name="type"
@@ -168,80 +179,71 @@ export const TransactionForm = () => {
               checked={formData.type === 'expense'}
               onChange={handleChange}
               className={css.radioChoice}></input>
-            <label for="expense" id="expense" className={css.radioLabel}>Expense</label>
+            <label htmlFor="expense" className={css.radioLabel}>Expense</label>
           </div>
-        </form>
              
         <div className={css.dateTimeContainer}>
-             {/* for the date form */}
-          <form action="">
-            <div className={css.dateInput}>
-              <label className={css.formLabel}>Date</label>
-              <div className={css.inputWrapper}>
-                <input 
-                  type="text"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  placeholder="mm/dd/yyyy"
-                  className={css.inputField}></input>
-                <FiCalendar className={css.icon} />
-              </div>
+          {/* Date input */}
+          <div className={css.dateInput}>
+            <label className={css.formLabel}>Date</label>
+            <div className={css.inputWrapper}>
+              <input 
+                type="text"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                placeholder="mm/dd/yyyy"
+                className={css.inputField}></input>
+              <FiCalendar className={css.icon} />
             </div>
-          </form>
+          </div>
 
-          {/* for the time form */}
-          <form action="">
-            <div className={css.timeInput}>
-              <label className={css.formLabel}>Time</label>
-              <div className={css.inputWrapper}>
-                <input 
-                  type="text"
-                  name="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  placeholder="00:00:00"
-                  className={css.inputField}></input>
-                <AiOutlineClockCircle className={css.icon} />
-              </div>
+          {/* Time input */}
+          <div className={css.timeInput}>
+            <label className={css.formLabel}>Time</label>
+            <div className={css.inputWrapper}>
+              <input 
+                type="text"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+                placeholder="00:00:00"
+                className={css.inputField}></input>
+              <AiOutlineClockCircle className={css.icon} />
             </div>
-          </form>
-        </div>   
-        {/* other part of the form */}
+          </div>
+        </div>  
+
+        {/* Category input */}
         <div className={css.categoryField}>
-          <form action="">
-            <label className={css.formLabel}>Category</label>
-            <input 
-              type="text" 
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              placeholder="Different" 
-              className={css.inputField}></input>
-          </form>
+          <label className={css.formLabel}>Category</label>
+          <input 
+            type="text" 
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            placeholder="Different" 
+            className={css.inputField}></input>
         </div>
 
+        {/* Amount inpute */}
         <div className={css.sumField}>
-          <form action="">
-            <div className={css.sumInput}>
-              <label className={css.formLabel}>Sum</label>
-              <div className={css.inputWrapper}>
-                <input 
-                  type="number"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleChange}
-                  placeholder="Enter the sum" 
-                  className={css.inputField}></input>
-                <span className={css.currency}>UAH</span>
-              </div>
-            </div>
-          </form>
+          <label className={css.formLabel}>Sum</label>
+          <div className={css.inputWrapper}>
+            <input 
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              placeholder="Enter the sum" 
+              className={css.inputField}></input>
+            <span className={css.currency}>UAH</span>
+          </div>
         </div>
 
+        {/* Comment inpute */}
         <div className={css.commentField}>
-          <form action="">
-            <label className={css.formLabel}>Comment</label>
+          <label className={css.formLabel}>Comment</label>
             <textarea 
               id="comment" 
               name="comment" 
@@ -250,19 +252,17 @@ export const TransactionForm = () => {
               placeholder="Enter the text" 
               className={css.commentBox}>
             </textarea>
-          </form>
         </div>
+
+        {/* Submit button */}
         <button 
           className={css.addBtn}
-          type="submit"
-          onClick={handleSubmit}
-          >
+          type="submit">
             Add
         </button>
-      </div>
-
-      </div>  
+      </form>
     </div>
-  
+  </div>  
+</div>  
   );
 };
