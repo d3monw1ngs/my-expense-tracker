@@ -1,62 +1,84 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCategory, fetchCategories, deleteCategories, updateCategoriesThunk } from "./categoryOperations";
+import { addCategory, fetchCategories, deleteCategory, updateCategory } from "./categoryOperations";
 
-export const categoriesSlice = createSlice({
-    name: 'categories',
+// Utility function for pending state
+const setAuthPending = state => {
+    state.isLoading = true;
+    state.isError = null;
+}
+
+// Utility function for handling errors
+const setAuthError = (state, action) => {
+    state.isLoading = false;
+    state.isError = action.payload;
+}
+
+// Slice definition
+export const categorySlice = createSlice({
+    name: 'category',
     initialState: {
-        items: [],
-        status: 'idle',
-        error: null,
+        items: {
+            expenses: [],
+            income: [],
+        },
+        isLoading: false,
+        isError: null
     },
-    reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCategories.pending, (state) => {
-                state.status = 'loading';
-            })
+            // Fetch Categories
+            .addCase(fetchCategories.pending, setAuthPending)
             .addCase(fetchCategories.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.items = action.payload;
+                const { expenses = [], income = [] } = action.payload || {};
+
+                state.isLoading = false;
+                state.items = { expenses, income };
+                state.isError = null;
             })
-            .addCase(fetchCategories.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload || 'Failed to fetch categories';
-            })
-            .addCase(addCategory.pending, (state) => {
-                state.status = 'loading';
-            })
+            .addCase(fetchCategories.rejected, setAuthError)
+
+            // Add Category
+            .addCase(addCategory.pending, setAuthPending)
             .addCase(addCategory.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.items.push(action.payload);
+                state.isLoading = false;
+                // Add the new category to the corresponding array
+                const { type, category } = action.payload;
+                state.items[type].push(category);
             })
-            .addCase(addCategory.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload;
+            .addCase(addCategory.rejected, setAuthError)
+
+            // Delete Category
+            .addCase(deleteCategory.pending, setAuthPending)
+            .addCase(deleteCategory.fulfilled, (state, action) => {
+                const { type, id } = action.payload;
+
+                // Ensure we find the index safely
+                const categoryList = state.items[type] || [];
+                state.items[type] = categoryList.filter(category => category._id !== id);
+
+                state.isLoading = false;
+                state.isError = null;                
             })
-            .addCase(deleteCategories.pending, (state) => {
-                state.status = 'loading';
+            .addCase(deleteCategory.rejected, setAuthError)
+
+            // Update Category
+            .addCase(updateCategory.pending, setAuthPending)
+            .addCase(updateCategory.fulfilled, (state, action) => {
+                const { type, _id } = action.payload;
+
+                // Ensure we have a valid category list for the given type
+                const categoryList = state.items[type] || [];
+
+                // Use map to create a new array with the updated category
+                state.items[type] = categoryList.map(category => 
+                    category._id === _id ? action.payload : category
+                );
+
+                state.isLoading = false;
+                state.isError = null
             })
-            .addCase(deleteCategories.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.items = state.items.filter(category => category.id !== action.payload);
-            })
-            .addCase(deleteCategories.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload;
-            })
-            .addCase(updateCategoriesThunk.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(updateCategoriesThunk.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                const index = state.items.findIndex(category => category.id === action.payload.id);
-                if (index !== -1) {
-                    state.items[index] = action.payload;
-                }
-            })
-            .addCase(updateCategoriesThunk.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload;
-            });
-    },
+            .addCase(updateCategory.rejected, setAuthError)            
+    }
 });
+
+export const categoryReducer = categorySlice.reducer;

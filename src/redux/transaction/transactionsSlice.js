@@ -1,64 +1,94 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchTransactions, updateTransactionThunk, addTransaction, deleteTransaction } from "./transactionsOperators";
+import { 
+    fetchTransactions, 
+    updateTransaction, 
+    addTransaction, 
+    deleteTransaction 
+} from "./transactionsOperators";
 
-const initialState = {
-    items: [],
-    status: 'idle',
-    error: null,
+// Utility function for pending state
+const handlePending = (state) => {
+    state.isLoading = true;
+    state.isError = null;
 };
+
+// Utility function for setting fulfilled state
+const handleFulfilled = (state, action, type) => {
+    state.item[type] = action.payload.data;
+    state.isLoading = false;
+    state.isError = null;
+}
+
+// Utility function for handling errors
+const handleError = (state, action) => {
+    state.isLoading = false;
+    state.isError = action.payload;
+}
 
 export const transactionsSlice = createSlice({
     name: 'transactions',
-    initialState,
-    reducers: {},
+    initialState: {
+        item: {
+            expenses: [],
+            income: []
+        },
+        isLoading: false,
+        isError: null,
+        search: {
+            keyword: '',
+            date: '',
+            type: ''
+        }
+    },
+    reducers: {
+        searchTransaction: (state, action) => {
+            const { keyword, date, type } = action.payload;
+            state.search = { keyword, date, type };
+        }
+    },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchTransactions.pending, (state) => {
-                state.status = 'loading';
-            })
+            // Fetch transactions
+            .addCase(fetchTransactions.pending, handlePending)
             .addCase(fetchTransactions.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.items = action.payload;
+                const type = action.payload.type;
+                handleFulfilled(state, action, type);
             })
-            .addCase(fetchTransactions.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload || 'Failed to fetch transactions';
-            })
-            .addCase(addTransaction.pending, (state) => {
-                state.status = 'loading';
-            })
+            .addCase(fetchTransactions.rejected, handleError)
+
+            // Add transaction
+            .addCase(addTransaction.pending, handlePending)
             .addCase(addTransaction.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.items.push(action.payload);
+                const type = action.payload.type;
+                state.item[type].push(action.payload.data);
+                state.isLoading = false;
+                state.isError = null;
             })
-            .addCase(addTransaction.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload || 'Failed to add transaction';
-            })
-            .addCase(deleteTransaction.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(deleteTransaction.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.items = state.items.filter(transaction => transaction.id !== action.payload);
-            })
-            .addCase(deleteTransaction.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload || 'Failed to delete transaction';
-            })
-            .addCase(updateTransactionThunk.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(updateTransactionThunk.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                const index = state.items.findIndex(transaction => transaction.id === action.payload.id);
+            .addCase(addTransaction.rejected, handleError)
+
+            // Update transaction
+            .addCase(updateTransaction.pending, handlePending)
+            .addCase(updateTransaction.fulfilled, (state, action) => {
+                const { type, _id } = action.payload;
+                const index = state.item[type].findIndex(tx => tx._id === _id);
                 if (index !== -1) {
-                    state.items[index] = action.payload;
+                    state.item[type][index] = action.payload.data;
                 }
+                state.isLoading = false;
             })
-            .addCase(updateTransactionThunk.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload;
-            });
+            .addCase(updateTransaction.rejected, handleError)
+
+            // Delete Transaction
+            .addCase(deleteTransaction.pending, handlePending)
+            .addCase(deleteTransaction.fulfilled, (state, action) => {
+                const { type, id } = action.payload;
+                state.item[type] = state.item[type].filter(tx => tx._id !== id);
+                state.isLoading = false;
+                state.isError = null;
+            })
+            .addCase(deleteTransaction.rejected, handleError);
     },
 });
+
+export const { searchTransaction } = transactionsSlice.actions;
+export const transactionsReducer = transactionsSlice.reducer;

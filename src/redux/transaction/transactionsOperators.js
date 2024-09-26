@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { requestParams, setAuthHeader } from "../../redux/auth/authOperations";
 import axios from "axios";
 
 axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
@@ -6,26 +7,28 @@ axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 // Fetch transactions by type
 export const fetchTransactions = createAsyncThunk(
     'transactions/fetchTransactions',
-    
-    async (_, thunkAPI) => {
+    async ({ type, date }, thunkAPI) => {
         try {
-            const response = await axios.get(`transactions`);
-            console.log("Fetched transactions:", response.data);
-            return response.data;
+            const {aToken} = requestParams(thunkAPI);
+            if (aToken === null) return thunkAPI.rejectWithValue('no token');
+            setAuthHeader(aToken);
+            const response = await axios.get(`/transactions/${type}`, {date});
+            return { data: response.data, type };
         } catch (error) {
             console.error("Fetch transactions error:", error.message);
             return thunkAPI.rejectWithValue(error.message);
-        }
-       
+        }       
     }
 );
 
 // Create a new transaction
 export const addTransaction = createAsyncThunk(
     'transactions/addTransaction',
-    async (newTransaction, thunkAPI) => {
+    async (transactionData, thunkAPI) => {
         try {
-            const response = await axios.post('transactions', newTransaction);
+            const { aToken } = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            const response = await axios.post('/transactions', transactionData);
             console.log("Added transaction:", response.data);
             return response.data;
         } catch (error) {
@@ -38,11 +41,13 @@ export const addTransaction = createAsyncThunk(
 // Delete a transaction by ID
 export const deleteTransaction = createAsyncThunk(
     'transactions/deleteTransaction',
-    async (transactionId, thunkAPI) => {
+    async ({type, id}, thunkAPI) => {
         try {
-            await axios.delete(`transactions/${transactionId}`);
-            console.log("Deleted transaction:", transactionId);
-            return transactionId;
+            const {aToken} = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            await axios.delete(`/transactions/${id}`, { type });
+            console.log("Deleted transaction:", id);
+            return {id, type};
         } catch (error) {
             console.error("Delete transaction error:", error.message);
             return thunkAPI.rejectWithValue(error.message);
@@ -51,14 +56,52 @@ export const deleteTransaction = createAsyncThunk(
 );
 
 // Update a transaction by ID
-export const updateTransactionThunk = createAsyncThunk(
-    'transactions/updateTransactionThunk',
-    async (updatedTransaction, thunkAPI) => {
+export const updateTransaction = createAsyncThunk(
+    'transactions/updateTransaction',
+    async (transactionData, thunkAPI) => {
+        const {
+            id,
+            type,
+            date,
+            time,
+            category,
+            sum,
+            comment,
+            editType,
+            oldType
+        } = transactionData;
+
         try {
-            const { id } = updatedTransaction;
-            const response = await axios.patch(`transactions/${id}`, updatedTransaction);
-            console.log("Updated transaction:", response.data);
-            return response.data;
+            const { aToken } = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            let response;
+
+            if (editType === 'content') {
+                response = await axios.patch(`/transactions/${type}/${id.old}`, {
+                    date,
+                    time,
+                    category,
+                    sum,
+                    comment
+                });
+            } else {
+                response = await axios.post('/transactions', {
+                    type,
+                    date,
+                    time,
+                    category,
+                    sum,
+                    comment
+                });
+                await axios.delete(`/transactions/${id.old}`, { data: { type } });
+            }
+           
+            return {
+                ...response.data,
+                editType,
+                oldId: id.old,
+                oldType
+            };
         } catch (error) {
            console.error("Update transaction error:", error.message);
            return thunkAPI.rejectWithValue(error.message);

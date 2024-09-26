@@ -1,4 +1,5 @@
 import axios from "axios";
+import { requestParams, setAuthHeader } from "../../redux/auth/authOperations";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
@@ -6,9 +7,11 @@ axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 // Create a new transaction category
 export const addCategory = createAsyncThunk(
     'categories/addCategory',
-    async (newCategory, thunkAPI) => {
+    async ({ type, categoryName }, thunkAPI) => {
         try {
-            const response = await axios.post('categories', newCategory);
+            const { aToken } = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            const response = await axios.post('categories', { type, categoryName });
             return response.data;
         } catch (error) {
             console.error("Add categories error:", error.message);
@@ -20,8 +23,10 @@ export const addCategory = createAsyncThunk(
 // Fetch user's transactions categories
 export const fetchCategories = createAsyncThunk(
     'categories/fetchCategories',
-    async (__, thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
+            const { aToken } = requestParams(thunkAPI);
+            setAuthHeader(aToken);
             const response = await axios.get('categories');
             return response.data;
         } catch (error) {
@@ -32,13 +37,15 @@ export const fetchCategories = createAsyncThunk(
 );
 
 // Update user's transactions category
-export const updateCategoriesThunk = createAsyncThunk(
-    'categories/updateCategoriesThunk',
-    async (updateCategories, thunkAPI) => {
+export const updateCategory = createAsyncThunk(
+    'categories/updateCategory',
+    async ({ id, categoryName, type }, thunkAPI) => {
         try {
-            const { id } = updateCategories;
-            const response = await axios.patch(`categories/${id}`, updateCategories);
-            return response.data;
+            const { aToken } = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            const response = await axios.patch(`categories/${id}`, { categoryName });
+            const data = { ...response.data, type }
+            return data;
         } catch (error) {
             console.error('Update categories error:', error.message);
             return thunkAPI.rejectWithValue(error.message);
@@ -47,13 +54,14 @@ export const updateCategoriesThunk = createAsyncThunk(
 );
 
 // Delete categories by ID
-export const deleteCategories = createAsyncThunk(
-    'categories/deleteCategories',
-    async (categoryId, thunkAPI) => {
+export const deleteCategory = createAsyncThunk(
+    'categories/deleteCategory',
+    async ({id, type}, thunkAPI) => {
         try {
-            await axios.delete(`categories/${categoryId}`);
-            console.log('Deleted category:', categoryId);
-            return categoryId;
+            const { aToken } = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            await axios.delete(`categories/${id}`, type);
+            return { id, type };
         } catch (error) {
             console.error('Delete category error:', error.message);
             return thunkAPI.rejectWithValue(error.message);

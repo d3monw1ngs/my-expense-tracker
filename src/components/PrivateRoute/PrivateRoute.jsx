@@ -1,4 +1,4 @@
-import { useAuth } from "../../redux/hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectIsRefreshing } from "../../redux/auth/authSelectors";

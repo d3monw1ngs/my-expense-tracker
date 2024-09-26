@@ -12,6 +12,15 @@ export const clearAuthHeader = () => {
     delete axios.defaults.headers.common.Authorization;
 };
 
+export const requestParams = thunkAPI => {
+    const state = thunkAPI.getState();
+    const rToken = state.auth.token.refreshToken;
+    const aToken = state.auth.token.accessToken;
+    const sid = state.auth.sid;
+
+    return { rToken, aToken, sid };
+}
+
 // Async Thunks for Authentication Actions
 
 // Register a new user
@@ -23,8 +32,7 @@ export const register = createAsyncThunk(
                 setAuthHeader(response.data.accessToken);              
                 return response.data;
         } catch (error) {
-            const message = error.response?.data?.message || 'Registration failed';
-            return thunkAPI.rejectWithValue(message);
+            return thunkAPI.rejectWithValue(error.response.status);
         }
     } 
 );
@@ -37,9 +45,7 @@ export const logIn = createAsyncThunk(
             const response = await axios.post('auth/login', {email, password});
                 // Set the token after a successful login
                 setAuthHeader(response.data.accessToken);
-            // Get current user info after login
-            const userInfo = await axios.get('users/current');
-                return { ...response.data, userInfo: userInfo.data };
+                return response.data;
         } catch (error) {
             const message = error.response?.data?.message || 'Login failed';
             return thunkAPI.rejectWithValue(message);
@@ -52,8 +58,8 @@ export const logOut = createAsyncThunk(
     'auth/logOut',
     async (_, thunkAPI) => {
         try {
-            await axios.get('auth/logout');
-            clearAuthHeader(); // Clear the token after logout
+            const { rToken } = requestParams(thunkAPI);
+            return await axios.get('auth/logout', {rToken});
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data?.message || 'Logout failed');
         }
@@ -61,28 +67,70 @@ export const logOut = createAsyncThunk(
 );
 
 // Refresh the user's token
-export const refreshUser = createAsyncThunk(
+export const resetPage = createAsyncThunk(
     'auth/refresh',
     async (_, thunkAPI) => {
-        const state = thunkAPI.getState();
-        const persistedToken = state.auth.refreshToken;
+        const { rToken, sid } = requestParams(thunkAPI);
 
-        if (!persistedToken) {
+        if (rToken === null) {
             return thunkAPI.rejectWithValue('No refresh token found.');
         }
         try {
-            setAuthHeader(persistedToken);
-
+            setAuthHeader(rToken);
             // Get a new access token using the refresh token
-            const response = await axios.post('auth/refresh');
-            const { accessToken, refreshToken } = response.data;
-            // Update the headers with teh new access token
-            setAuthHeader(accessToken);
-
-            return { accessToken, refreshToken };
+            const response = await axios.post('auth/refresh', {sid});
+         
+            return response.data;
         } catch (error) {
-            clearAuthHeader();
             return thunkAPI.rejectWithValue(error.response?.data?.message || 'Token refresh failed');
+        }
+    }
+);
+
+export const refreshUser = createAsyncThunk(
+    'users/current',
+    async(_, thunkAPI) => {
+        const { aToken } = requestParams(thunkAPI);
+
+        if (aToken === null) {
+            return thunkAPI.rejectWithValue('Failed to fetch user');
+        }
+
+        try {
+            setAuthHeader(aToken);
+            const response = await axios.get('/users/current');
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const updateUser = createAsyncThunk(
+    'auth/updateUser',
+    async({ name, currency }, thunkAPI) => {
+        try {
+            const {aToken} = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            const response = await axios.patch('users/info', { name, currency });
+            return response.data;
+        } catch (error) {
+            thunkAPI.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const updateAvatar = createAsyncThunk(
+    'auth/updateAvatar',
+    async(avatarUrl, thunkAPI) => {
+        try {
+            console.log(avatarUrl);
+            const { aToken } = requestParams(thunkAPI);
+            setAuthHeader(aToken);
+            const response = await axios.patch('users/avatar', avatarUrl);
+            return response.data;
+        } catch (error) {
+            thunkAPI.rejectWithValue(error.message);
         }
     }
 );
