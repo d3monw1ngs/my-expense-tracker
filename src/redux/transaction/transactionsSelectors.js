@@ -1,16 +1,31 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { selectCategory } from "../../redux/category/categorySelectors";
 
-export const selectTransaction = state => state.transaction.item;
-export const selectIsLoading = state => state.transaction.isLoading;
-export const selectSearchQuery = state => state.transaction.search;
+export const selectTransaction = state => {
+    console.log('Current state of transactons:', state.transactions);
+    return state.transactions?.item || { expenses: [], income: [] };
+};
+export const selectIsLoading = state => {
+    console.log('Is loading:', state.transactions?.isLoading);
+    return state.transactions?.isLoading || false;
+};
+export const selectSearchQuery = state => {
+    console.log('Current Search Query:', state.transactions?.search);
+    return state.transactions?.search || { keyword: '', date: '', type: '' };
+};
 
 const getRandomHexColor = () => {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, 0)}`;
 }
 
-export const selectTransactionTotal = createSelector([selectTransaction],
+export const selectTransactionTotal = createSelector(
+    [selectTransaction],
     (transaction) => {
+        if(!transaction || !transaction.expenses || !transaction.income) {
+            console.warn('Transaction data is malformed:', transaction);
+            return { expenses: 0, income: 0 };
+        }
+
         const expenses = transaction
             .expenses
             .reduce((total, expense) => 
@@ -27,12 +42,19 @@ export const selectVisibleTransaction = createSelector(
     [selectSearchQuery, selectTransaction],
     (searchQuery, transaction) => {
         const type = searchQuery.type || 'expenses';
+
+        // Check if transaction and type are valid
+        if (!transaction || !transaction[type]) {
+            console.warn('Transaction or type is invalid:', transaction, type);
+            return [];
+        }
+
         const keyword = searchQuery.keyword ? searchQuery.keyword.toLowerCase() : '';
         const date = searchQuery.date || '';
 
         const matchesKeyword = (data) =>
             data.comment.toLowerCase().includes(keyword) ||
-            data.category.categoryName.toLowerCase().includes(keyword);
+            data.category?.categoryName?.toLowerCase().includes(keyword);
         
         const matchesDate = (data) => data.date === date;
 

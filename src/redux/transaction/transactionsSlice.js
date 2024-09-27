@@ -21,8 +21,9 @@ const handleFulfilled = (state, action, type) => {
 
 // Utility function for handling errors
 const handleError = (state, action) => {
+    console.error('Error occurred:', action.error.message);
     state.isLoading = false;
-    state.isError = action.payload;
+    state.isError = action.error.message;
 }
 
 export const transactionsSlice = createSlice({
@@ -42,7 +43,7 @@ export const transactionsSlice = createSlice({
     },
     reducers: {
         searchTransaction: (state, action) => {
-            const { keyword, date, type } = action.payload;
+            const { keyword, date, type = 'expenses' } = action.payload;
             state.search = { keyword, date, type };
         }
     },
@@ -51,16 +52,20 @@ export const transactionsSlice = createSlice({
             // Fetch transactions
             .addCase(fetchTransactions.pending, handlePending)
             .addCase(fetchTransactions.fulfilled, (state, action) => {
-                const type = action.payload.type;
-                handleFulfilled(state, action, type);
+                const type = action.payload.type || 'expenses';
+                if (state.item[type]) {
+                    handleFulfilled(state, action, type);
+                }
             })
             .addCase(fetchTransactions.rejected, handleError)
 
             // Add transaction
             .addCase(addTransaction.pending, handlePending)
             .addCase(addTransaction.fulfilled, (state, action) => {
-                const type = action.payload.type;
-                state.item[type].push(action.payload.data);
+                const {type, data} = action.payload;
+                if (state.item[type]) {
+                    state.item[type].push(data);
+                }
                 state.isLoading = false;
                 state.isError = null;
             })

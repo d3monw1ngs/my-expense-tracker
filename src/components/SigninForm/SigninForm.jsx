@@ -5,6 +5,8 @@ import { logIn } from '../../redux/auth/authOperations';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLoading, selectAuthError } from '../../redux/auth/authSelectors';
+import { Navbar } from '../../components/NavBar/Navbar';
+import { DecorationTab } from 'components/DecorationTab/DecorationTab';
 
 export const SigninForm = () => {
     const [email, setEmail] = useState('');
@@ -41,11 +43,15 @@ export const SigninForm = () => {
     }, [authError]);
 
   return (
-    <div>
-        <div>
+    <div className={css.signinContainer}>
+         <Navbar />
+        <div className={css.signinWrapper}>            
+            <div className={css.signinImageWrapper}>
+            <DecorationTab />
+            </div>
         <div className={css.signinFormContainer}>  
         <div className={css.siDetails}>
-            <h1>Sign In</h1>
+           
             <p className={css.signinText}>Welcome back to effortless expense tracking! Your financial
                 dashboard awaits.
             </p>

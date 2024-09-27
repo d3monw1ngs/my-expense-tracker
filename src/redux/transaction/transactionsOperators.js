@@ -13,6 +13,7 @@ export const fetchTransactions = createAsyncThunk(
             if (aToken === null) return thunkAPI.rejectWithValue('no token');
             setAuthHeader(aToken);
             const response = await axios.get(`/transactions/${type}`, {date});
+            console.log('Fetched transactions:', response.data)
             return { data: response.data, type };
         } catch (error) {
             console.error("Fetch transactions error:", error.message);

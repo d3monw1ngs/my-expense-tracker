@@ -23,4 +23,6 @@ export const store = configureStore({
         }),
 });
 
+console.log('Initial Redux State:', store.getState());
+
 export const persistor = persistStore(store);

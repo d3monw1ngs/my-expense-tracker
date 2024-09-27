@@ -1,38 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTransaction, fetchTransactions } from '../../redux/transaction/transactionsOperators';
-import { getTransactions, getLoader, getError } from '../../redux/transaction/transactionsSelectors';
+import { addTransaction, fetchTransactions } from '../../redux/transaction/transactionsOperators'; 
+import { 
+  selectTransactionTotal,
+  selectVisibleTransaction,
+  selectIsLoading } from '../../redux/transaction/transactionsSelectors';
 import css from './TransactionForm.module.css';
 import { FiCalendar } from 'react-icons/fi';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { TransactionNav } from './TransactionNav';
 import arrowUp from '../../images/Arrow 15.svg';
 
-
-const calculateCategoryPercentages = (transactions) => {
-  const totalExpense = transactions
-    .filter(transaction => transaction.type === 'expense')
-    .reduce((total, transaction) => total + transaction.amount, 0);
-  
-  const categorySums = transactions.reduce((acc, transaction) => {
-    if (transaction.type === 'expense') {
-      acc[transaction.category] = (acc[transaction.category] || 0) + transaction.amount;
-    }
-    return acc;
-  }, {});
-
-  return Object.entries(categorySums).map(([category, sum]) => ({
-    category,
-    percentage: ((sum / totalExpense) * 100).toFixed(2),
-  }));
-};
-
 export const TransactionForm = ({ transactionType }) => {
     const dispatch = useDispatch();
-    const transactions = useSelector(getTransactions);
-    const loading = useSelector(getLoader);
-    const error = useSelector(getError);
-    const categoryPercentages = calculateCategoryPercentages(transactions);
+    // Use selectors to get state from Redux
+    const { expenses, income } = useSelector(selectTransactionTotal);
+    const visibleTransaction = useSelector(selectVisibleTransaction);
+    const loading = useSelector(selectIsLoading);
+    
 
     const [formData, setFormData] = useState({
         type: 'expense',
@@ -91,20 +76,9 @@ export const TransactionForm = ({ transactionType }) => {
       });
     };
 
-    const calculateTotal = (type) => {
-      if (!transactions || !Array.isArray(transactions)) return 0;
-      return transactions
-        .filter(transaction => transaction.type === type)
-        .reduce((total, transaction) => total + transaction.amount, 0)
-        .toFixed(2);
-    };
-
-    const totalIncome = calculateTotal('income');
-    const totalExpense = calculateTotal('expense');
-
-      // Render form and handle loading and error status
-      if (loading === 'loading') return <div>Loading transactions...</div>;
-      if (loading === 'failed') return <div>Error loading transactions: {error}</div>;    
+    // Render form and handle loading state
+    if (loading === 'loading') return <div>Loading transactions...</div>;
+    if (loading === 'failed') return <div>Error loading transactions.</div>; 
   
   return (
     <div>
@@ -125,7 +99,7 @@ export const TransactionForm = ({ transactionType }) => {
                 </div>
                 <div className={css.incomeInfo}>
                   <p className={css.incTitle}>Total Income</p>
-                  <p className={css.incAmount}>${totalIncome}</p>
+                  <p className={css.incAmount}>${income}</p>
                 </div>
               </div>
               <div className={css.expenseWrapper}>
@@ -134,7 +108,7 @@ export const TransactionForm = ({ transactionType }) => {
                 </div>
                 <div className={css.expenseInfo}>
                   <p className={css.expTitle}>Total Expense</p>
-                  <p className={css.expAmount}>${totalExpense}</p>
+                  <p className={css.expAmount}>${expenses}</p>
                 </div>
               </div>
             </div>
@@ -144,16 +118,21 @@ export const TransactionForm = ({ transactionType }) => {
               <div className={css.textAndDonut}>
                 <p className={css.catText}>Expenses categories</p>
                 <div className={css.semiDonut}>
-                  {categoryPercentages.reduce((total, cat) => total + parseFloat(cat.percentage), 0)}%
+                  {visibleTransaction.reduce((total, transaction) => total + transaction.sum, 0)}%
                 </div>
               </div>
               <div className={css.catList}>
                 <ul className={css.list}>
-                  {categoryPercentages.map((cat, index) => (
-                    <li key={index}>
-                      <span>{cat.category}</span><span className={css.spanTag}>{cat.percentage}%</span>
-                    </li>
-                  ))}
+                  {visibleTransaction.length === 0 ? (
+                    <p>No transactions found for the current search.</p>
+                  ) : (
+                    visibleTransaction.map((transaction, index) => (
+                      <li key={index}>
+                        <span>{transaction.category.categoryName}</span>
+                        <span className={css.spanTag}>${transaction.sum.toFixed(2)}</span>
+                      </li>
+                    ))
+                  )}
                 </ul>
               </div>
             </div>
