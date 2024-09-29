@@ -5,11 +5,11 @@ axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 
 // Helper functions to set and clear Authorization headers
 export const setAuthHeader = token => {
-    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-export const clearAuthHeader = () => {
-    delete axios.defaults.headers.common.Authorization;
+    if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+        delete axios.defaults.headers.common['Authorization'];
+    }
 };
 
 export const requestParams = thunkAPI => {
@@ -26,10 +26,10 @@ export const requestParams = thunkAPI => {
 // Register a new user
 export const register = createAsyncThunk(
     'auth/register',
-    async ({ name, email, password}, thunkAPI) => {
+    async ({ name, email, password }, thunkAPI) => {
         try {
             const response = await axios.post('auth/register', { name, email, password });
-                setAuthHeader(response.data.accessToken);              
+                setAuthHeader(response.data.aToken);              
                 return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.status);
@@ -44,7 +44,8 @@ export const logIn = createAsyncThunk(
         try {
             const response = await axios.post('auth/login', {email, password});
                 // Set the token after a successful login
-                setAuthHeader(response.data.accessToken);
+                setAuthHeader(response.data.aToken);
+                // console.log("Auth state:", thunkAPI.getState().auth);
                 return response.data;
         } catch (error) {
             const message = error.response?.data?.message || 'Login failed';
@@ -59,7 +60,9 @@ export const logOut = createAsyncThunk(
     async (_, thunkAPI) => {
         try {
             const { rToken } = requestParams(thunkAPI);
-            return await axios.get('auth/logout', {rToken});
+            const response = await axios.get('auth/logout', { params: { refreshToken: rToken } });
+            setAuthHeader(null);
+            return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data?.message || 'Logout failed');
         }
@@ -72,27 +75,30 @@ export const resetPage = createAsyncThunk(
     async (_, thunkAPI) => {
         const { rToken, sid } = requestParams(thunkAPI);
 
-        if (rToken === null) {
+        if (!rToken) {
             return thunkAPI.rejectWithValue('No refresh token found.');
         }
         try {
-            setAuthHeader(rToken);
             // Get a new access token using the refresh token
             const response = await axios.post('auth/refresh', {sid});
+            console.log('Refresh response:', response.data);
+            const { aToken, rToken } = response.data;
+            setAuthHeader(aToken);
          
-            return response.data;
+            return { aToken, rToken, sid };
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data?.message || 'Token refresh failed');
         }
     }
 );
 
+// Get current user
 export const refreshUser = createAsyncThunk(
     'users/current',
     async(_, thunkAPI) => {
         const { aToken } = requestParams(thunkAPI);
 
-        if (aToken === null) {
+        if (!aToken) {
             return thunkAPI.rejectWithValue('Failed to fetch user');
         }
 
@@ -106,6 +112,7 @@ export const refreshUser = createAsyncThunk(
     }
 );
 
+// Update user information
 export const updateUser = createAsyncThunk(
     'auth/updateUser',
     async({ name, currency }, thunkAPI) => {
@@ -120,6 +127,7 @@ export const updateUser = createAsyncThunk(
     }
 );
 
+// Update user's avatar
 export const updateAvatar = createAsyncThunk(
     'auth/updateAvatar',
     async(avatarUrl, thunkAPI) => {

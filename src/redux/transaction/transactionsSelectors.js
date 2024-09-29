@@ -13,30 +13,24 @@ export const selectSearchQuery = state => {
     console.log('Current Search Query:', state.transactions?.search);
     return state.transactions?.search || { keyword: '', date: '', type: '' };
 };
+export const selectExpenses = state => state.transactios?.expenses || [];
 
 const getRandomHexColor = () => {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, 0)}`;
 }
 
 export const selectTransactionTotal = createSelector(
-    [selectTransaction],
-    (transaction) => {
-        if(!transaction || !transaction.expenses || !transaction.income) {
-            console.warn('Transaction data is malformed:', transaction);
-            return { expenses: 0, income: 0 };
-        }
-
-        const expenses = transaction
-            .expenses
-            .reduce((total, expense) => 
-                total += expense.sum, 0);
-        const income = transaction
-            .income
-            .reduce((total, income) => 
-                total =+ income.sum, 0);
-        
-        return { expenses, income };
-});
+    [state => state.transactions],
+    (transactions = {}) => {
+      const expenses = transactions?.expenses || [];
+      const incomes = transactions?.incomes || [];
+      
+      const totalExpenses = expenses.reduce((total, expense) => total + expense.sum, 0);
+      const totalIncomes = incomes.reduce((total, income) => total + income.sum, 0);
+  
+      return { totalExpenses, totalIncomes };
+    }
+  );
 
 export const selectVisibleTransaction = createSelector(
     [selectSearchQuery, selectTransaction],
@@ -70,8 +64,8 @@ export const selectVisibleTransaction = createSelector(
 export const selectExpenseAvg = createSelector(
     [selectTransaction, selectCategory],
     (transaction, category) => {
-        const expenseCategories = category.expenses;
-        const expenses = transaction.expenses;
+        const expenseCategories = category?.expenses || [];
+        const expenses = transaction?.expenses || [];
         const categoryCount = {};
 
         if (expenseCategories.length === 0 || expenses.length === 0) {
@@ -79,9 +73,12 @@ export const selectExpenseAvg = createSelector(
         }
 
         // Count occurrences of each category in the transactions
-        expenses.forEach(transaction => {
-            const categoryName = transaction.category.categoryName;
-            categoryCount[categoryName] = (categoryCount[categoryName] || 0) + 1;
+        expenses.forEach(transactionItem => {
+            const categoryName = transactionItem?.category?.categoryName;
+
+            if (categoryName) {
+                categoryCount[categoryName] = (categoryCount[categoryName] || 0) + 1;
+            }
         });
 
         const categoryKeys = Object.keys(categoryCount);

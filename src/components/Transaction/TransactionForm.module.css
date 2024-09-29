@@ -125,8 +125,9 @@
         transform: rotate(-45deg)
     }
 }
-.spanTag {
-    color: #fafafa;
+.spanTag,
+.noTransTxt {
+    color: #fafafa66;
 }
 .catList {
     display: flex;

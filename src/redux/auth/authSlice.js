@@ -97,7 +97,8 @@ const authSlice = createSlice({
             .addCase(resetPage.fulfilled, (state, action) => {
                 state.token = {
                     aToken: action.payload.aToken,
-                    rToken: action.payload.rToken
+                    rToken: action.payload.rToken,
+                    sid: action.payload.sid
                 };
             })
             .addCase(resetPage.rejected, (state, action) => {

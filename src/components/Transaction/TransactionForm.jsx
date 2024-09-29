@@ -124,7 +124,7 @@ export const TransactionForm = ({ transactionType }) => {
               <div className={css.catList}>
                 <ul className={css.list}>
                   {visibleTransaction.length === 0 ? (
-                    <p>No transactions found for the current search.</p>
+                    <p className={css.noTransTxt}>No transactions found for the current search.</p>
                   ) : (
                     visibleTransaction.map((transaction, index) => (
                       <li key={index}>

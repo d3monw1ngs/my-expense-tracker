@@ -10,14 +10,19 @@ export const fetchTransactions = createAsyncThunk(
     async ({ type, date }, thunkAPI) => {
         try {
             const {aToken} = requestParams(thunkAPI);
-            if (aToken === null) return thunkAPI.rejectWithValue('no token');
+            if (!aToken) return thunkAPI.rejectWithValue('no token');
+
             setAuthHeader(aToken);
-            const response = await axios.get(`/transactions/${type}`, {date});
+
+            const response = await axios.get(`/transactions/${type}`, {
+                params: {date},
+            });
+
             console.log('Fetched transactions:', response.data)
             return { data: response.data, type };
         } catch (error) {
-            console.error("Fetch transactions error:", error.message);
-            return thunkAPI.rejectWithValue(error.message);
+            console.error("Fetch transactions error:", error);
+            return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to fetch transactions');
         }       
     }
 );
@@ -28,7 +33,14 @@ export const addTransaction = createAsyncThunk(
     async (transactionData, thunkAPI) => {
         try {
             const { aToken } = requestParams(thunkAPI);
+            console.log("Access Token:", aToken);
+
+            if (!aToken) {
+                return thunkAPI.rejectWithValue('Access token not found or invalid');
+            }
+
             setAuthHeader(aToken);
+
             const response = await axios.post('/transactions', transactionData);
             console.log("Added transaction:", response.data);
             return response.data;

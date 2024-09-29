@@ -9,29 +9,29 @@ import {
 // Utility function for pending state
 const handlePending = (state) => {
     state.isLoading = true;
-    state.isError = null;
+    state.isError = false;
 };
 
 // Utility function for setting fulfilled state
 const handleFulfilled = (state, action, type) => {
     state.item[type] = action.payload.data;
     state.isLoading = false;
-    state.isError = null;
-}
+    state.isError = false;
+};
 
 // Utility function for handling errors
 const handleError = (state, action) => {
     console.error('Error occurred:', action.error.message);
     state.isLoading = false;
-    state.isError = action.error.message;
-}
+    state.isError = action.error.message || 'An error occurred';
+};
 
 export const transactionsSlice = createSlice({
     name: 'transactions',
     initialState: {
         item: {
             expenses: [],
-            income: []
+            incomes: []
         },
         isLoading: false,
         isError: null,
@@ -55,6 +55,8 @@ export const transactionsSlice = createSlice({
                 const type = action.payload.type || 'expenses';
                 if (state.item[type]) {
                     handleFulfilled(state, action, type);
+                } else {
+                    console.warn(`Type ${type} not found in state.item`);
                 }
             })
             .addCase(fetchTransactions.rejected, handleError)
@@ -89,7 +91,7 @@ export const transactionsSlice = createSlice({
                 const { type, id } = action.payload;
                 state.item[type] = state.item[type].filter(tx => tx._id !== id);
                 state.isLoading = false;
-                state.isError = null;
+                state.isError = false;
             })
             .addCase(deleteTransaction.rejected, handleError);
     },

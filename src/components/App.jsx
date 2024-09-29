@@ -18,7 +18,7 @@ export const App = () => {
         <Route 
           path="signin" 
           element={
-            <RestrictedRoute component={SigninPage} redirectTo="/users/current" />} 
+            <RestrictedRoute component={SigninPage} redirectTo="/transactions" />} 
           />
         <Route 
           path="signup" 
@@ -30,10 +30,10 @@ export const App = () => {
           element={<PrivateRoute component={TransactionPage} redirectTo="/signin" />} 
         >
           <Route
-            path="transactions/expense"
+            path="expenses"
             element={<PrivateRoute component={ExpensePage} redirectTo="/signin" />} />
           <Route 
-            path= "transactions/income"
+            path= "incomes"
             element={<PrivateRoute component={IncomePage} redirectTo="/signin" />} />
         </Route>
         <Route path="*" element={<div>404 Not Found</div>} />
