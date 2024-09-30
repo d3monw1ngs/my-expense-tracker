@@ -21,9 +21,9 @@ const handleFulfilled = (state, action, type) => {
 
 // Utility function for handling errors
 const handleError = (state, action) => {
-    console.error('Error occurred:', action.error.message);
     state.isLoading = false;
-    state.isError = action.error.message || 'An error occurred';
+    state.isError = action.payload;
+    console.error('Transaction error:', action.payload);
 };
 
 export const transactionsSlice = createSlice({

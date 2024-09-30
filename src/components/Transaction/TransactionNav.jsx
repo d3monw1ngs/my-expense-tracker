@@ -7,12 +7,13 @@ import { UserNav } from 'components/NavBar/UserNav';
 export const TransactionNav = () => {
   const navigate = useNavigate();
 
+  // Navigate to the Expense Page
   const handleNavigateToExpense = () => {
     navigate('/ExpensePage');
   };
 
   const handleNavigateToIncome = () => {
-    navigate('/income');
+    navigate('/IncomePage');
   };
 
   const handleNavigateToTransactonForm = () => {

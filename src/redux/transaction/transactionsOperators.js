@@ -7,10 +7,12 @@ axios.defaults.baseURL = 'https://expense-tracker.b.goit.study/api/';
 // Fetch transactions by type
 export const fetchTransactions = createAsyncThunk(
     'transactions/fetchTransactions',
-    async ({ type, date }, thunkAPI) => {
+    async ({ type = 'expenses', date = '' }, thunkAPI) => {
         try {
             const {aToken} = requestParams(thunkAPI);
-            if (!aToken) return thunkAPI.rejectWithValue('no token');
+            if (!aToken) {
+                return thunkAPI.rejectWithValue('No authentication token found');
+            }
 
             setAuthHeader(aToken);
 

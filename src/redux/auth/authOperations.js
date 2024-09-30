@@ -14,9 +14,11 @@ export const setAuthHeader = token => {
 
 export const requestParams = thunkAPI => {
     const state = thunkAPI.getState();
-    const rToken = state.auth.token.refreshToken;
-    const aToken = state.auth.token.accessToken;
-    const sid = state.auth.sid;
+    const { rToken, aToken, sid } = state.auth.token || {};
+
+    if (!aToken || !rToken || !sid) {
+        throw new Error('Tokens or session ID missing');
+    }
 
     return { rToken, aToken, sid };
 }
@@ -43,9 +45,12 @@ export const logIn = createAsyncThunk(
     async ({email, password}, thunkAPI) => {
         try {
             const response = await axios.post('auth/login', {email, password});
+            console.log('Login response:', response.data);
                 // Set the token after a successful login
-                setAuthHeader(response.data.aToken);
-                // console.log("Auth state:", thunkAPI.getState().auth);
+                const { aToken, rToken } = response.data;
+                setAuthHeader(aToken);
+                localStorage.setItem('accessToken', aToken);
+                localStorage.setItem('refreshToken', rToken);
                 return response.data;
         } catch (error) {
             const message = error.response?.data?.message || 'Login failed';
@@ -80,12 +85,14 @@ export const resetPage = createAsyncThunk(
         }
         try {
             // Get a new access token using the refresh token
-            const response = await axios.post('auth/refresh', {sid});
+            const response = await axios.post('auth/refresh', { rToken, sid });
             console.log('Refresh response:', response.data);
-            const { aToken, rToken } = response.data;
+            const { aToken, rToken: newRToken } = response.data;
             setAuthHeader(aToken);
+            localStorage.setItem('accessToken', aToken);
+            localStorage.setItem('refreshToken', newRToken);
          
-            return { aToken, rToken, sid };
+            return { aToken, rToken: newRToken, sid };
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data?.message || 'Token refresh failed');
         }
